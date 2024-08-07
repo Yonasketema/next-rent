@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { Button, Icon } from "@mui/material";
 import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 const drawerWidth = 240;
 
@@ -194,7 +195,7 @@ export default function ({ children }) {
                     ":hover": {
                       backgroundColor: "#00ABFF40",
                     },
-                    my: 1,
+                    my: 0.5,
                   }}
                 >
                   <ListItemIcon
@@ -285,6 +286,7 @@ export default function ({ children }) {
 
             color: "white",
           }}
+          onClick={() => signOut()}
         >
           <Icon
             sx={{
