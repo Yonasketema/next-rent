@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String     @unique
+  emailVerified DateTime?
+  image         String?
+  password      String
+  location      String
+  phone         String
+  approved      Boolean    @default(false)
+  role          Role       @default(USER)
+  status        UserStatus @default(ACTIVE)
+  books         Book[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  Rent Rent[]
+}
+
+model Book {
+  id         String     @id @default(cuid())
+  title      String
+  author     String
+  category   Category   @relation(fields: [categoryId], references: [id])
+  categoryId String
+  owner      User       @relation(fields: [ownerId], references: [id])
+  ownerId    String
+  status     BookStatus @default(AVAILABLE)
+  price      Float
+  quantity   Int
+  rents      Rent[]
+  createdAt  DateTime   @default(now())
+  approved   Boolean    @default(false)
+  updatedAt  DateTime   @updatedAt
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String @unique
+  Book Book[]
+}
+
+model Rent {
+  id        String   @id @default(cuid())
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    String
+  renter    User     @relation(fields: [renterId], references: [id])
+  renterId  String
+  startDate DateTime
+  endDate   DateTime
+  price     Float
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  OWNER
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum BookStatus {
+  AVAILABLE
+  RENTED
+  UNAVAILABLE
+}
