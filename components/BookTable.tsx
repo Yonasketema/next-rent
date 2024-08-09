@@ -105,7 +105,7 @@ export default function BookTable({ books }: TableProps) {
     getRowId: (row) => row.id,
     renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
-        <DialogTitle variant="h3">Edit User</DialogTitle>
+        <DialogTitle variant="h6">Edit Book</DialogTitle>
         <DialogContent
           sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
