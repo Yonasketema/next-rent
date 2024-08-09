@@ -15,7 +15,8 @@ import ListItemText from "@mui/material/ListItemText";
 import { Button, Icon } from "@mui/material";
 import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Header from "./Header";
 
 const drawerWidth = 240;
 
@@ -75,26 +76,31 @@ const links = [
     link: "dashboard",
     label: "DashBoard",
     icon: "dashboard",
+    role: ["ADMIN", "OWNER"],
   },
   {
     link: "books",
     label: "Books",
     icon: "books",
+    role: ["ADMIN"],
   },
   {
     link: "owners",
     label: "Owners",
     icon: "owner",
+    role: ["ADMIN"],
   },
   {
     label: "Book Upload",
     link: "book-upload",
     icon: "books",
+    role: ["OWNER"],
   },
   {
     label: "other",
     link: "other",
     icon: "other",
+    role: ["ADMIN", "OWNER"],
   },
 ];
 
@@ -103,22 +109,27 @@ const links_bottoms = [
     link: "notification",
     label: "Notification",
     icon: "notification",
+    role: ["ADMIN", "OWNER"],
   },
   {
     link: "settings",
     label: "Settings",
     icon: "settings",
+    role: ["ADMIN", "OWNER"],
   },
   {
     link: "Login as Admin",
     label: "Login as Admin",
     icon: "user",
+    role: ["ADMIN", "OWNER"],
   },
 ];
 
 export default function ({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const session = useSession();
+
   const pathName = usePathname();
 
   const handleDrawer = () => {
@@ -182,52 +193,62 @@ export default function ({ children }) {
         </DrawerHeader>
         <Divider color="gray" />
         <List>
-          {links.map((text, index) => (
-            <ListItem key={text.link} disablePadding sx={{ display: "block" }}>
-              <NavLink href={`/${text.link}`}>
-                <ListItemButton
-                  sx={{
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    color: "white",
-                    backgroundColor: "inherit",
-                    borderRadius: 1.5,
-                    ":hover": {
-                      backgroundColor: "#00ABFF40",
-                    },
-                    my: 0.5,
-                  }}
+          {links.map((text, index) => {
+            if (text.role.includes(session?.data?.user.role)) {
+              return (
+                <ListItem
+                  key={text.link}
+                  disablePadding
+                  sx={{ display: "block" }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Icon
+                  <NavLink href={`/${text.link}`}>
+                    <ListItemButton
                       sx={{
-                        textAlign: "center",
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
+                        color: "white",
+                        backgroundColor: "inherit",
+                        borderRadius: 1.5,
+                        ":hover": {
+                          backgroundColor: "#00ABFF40",
+                        },
+                        my: 0.5,
                       }}
                     >
-                      <img
-                        style={{
-                          display: "flex",
-                          height: "inherit",
-                          width: "inherit",
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
                         }}
-                        src={`/icons/${text.icon}.svg`}
+                      >
+                        <Icon
+                          sx={{
+                            textAlign: "center",
+                          }}
+                        >
+                          <img
+                            style={{
+                              display: "flex",
+                              height: "inherit",
+                              width: "inherit",
+                            }}
+                            src={`/icons/${text.icon}.svg`}
+                          />
+                        </Icon>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={text.label}
+                        sx={{ opacity: open ? 1 : 0 }}
                       />
-                    </Icon>
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={text.label}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </NavLink>
-            </ListItem>
-          ))}
+                    </ListItemButton>
+                  </NavLink>
+                </ListItem>
+              );
+            }
+
+            return null;
+          })}
         </List>
         <Divider color="gray" />
         <List>
@@ -281,9 +302,7 @@ export default function ({ children }) {
         <Button
           sx={{
             background: "#FFFFFF33",
-
             textTransform: "none",
-
             color: "white",
           }}
           onClick={() => signOut()}
@@ -324,12 +343,7 @@ export default function ({ children }) {
             backgroundColor: "white",
           }}
         >
-          <Typography variant="h6" color="#1A1919" fontWeight="bold">
-            Admin
-          </Typography>
-          <Typography variant="h6" color="gray" textTransform="capitalize">
-            {pathName}
-          </Typography>
+          <Header />
         </Box>
 
         {children}

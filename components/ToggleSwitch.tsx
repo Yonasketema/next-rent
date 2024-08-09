@@ -4,11 +4,27 @@ import { Switch, Typography, Box } from "@mui/material";
 
 import CheckIcon from "@mui/icons-material/Check";
 
-const ToggleSwitch = () => {
-  const [checked, setChecked] = useState(true);
+type ToggleSwitchProps = {
+  status: "ACTIVE" | "DISABLED";
+  ownerId: string;
+};
 
-  const handleChange = (event) => {
+const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
+  const [checked, setChecked] = useState(status === "ACTIVE");
+
+  console.log("ss", status, ownerId);
+
+  const handleChange = async (event) => {
     setChecked(event.target.checked);
+    await fetch(`http://localhost:3000/api/admin/owners/${ownerId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: !checked ? "ACTIVE" : "DISABLED",
+      }),
+    });
   };
 
   return (
