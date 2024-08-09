@@ -52,6 +52,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
   ...theme.mixins.toolbar,
 }));
+ 
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -146,12 +147,20 @@ export default function ({ children }) {
             backgroundColor: "#171B36",
             borderRadius: 3,
             color: "white",
-
+            display:'flex',
+            flexDirection:"column",
+            justifyContent:'space-between',
+            height:"100%",
+            
+             
+             
             ...(open && { px: 2 }),
           },
         }}
+        
       >
-        <DrawerHeader
+       <div>
+       <DrawerHeader
           sx={{
             ...(!open && { justifyContent: "center" }),
           }}
@@ -213,6 +222,8 @@ export default function ({ children }) {
                           backgroundColor: "#00ABFF40",
                         },
                         my: 0.5,
+                        height:36
+                        
                       }}
                     >
                       <ListItemIcon
@@ -225,6 +236,8 @@ export default function ({ children }) {
                         <Icon
                           sx={{
                             textAlign: "center",
+                            width:20,
+                            height:20
                           }}
                         >
                           <img
@@ -266,6 +279,7 @@ export default function ({ children }) {
                       backgroundColor: "#00ABFF40",
                     },
                     my: 1,
+                    height:36
                   }}
                 >
                   <ListItemIcon
@@ -278,6 +292,8 @@ export default function ({ children }) {
                     <Icon
                       sx={{
                         textAlign: "center",
+                        width:20,
+                        height:20
                       }}
                     >
                       <img
@@ -299,11 +315,15 @@ export default function ({ children }) {
             </ListItem>
           ))}
         </List>
+       </div>
         <Button
           sx={{
             background: "#FFFFFF33",
             textTransform: "none",
             color: "white",
+            marginBottom:"30%",
+ 
+            ...(!open && { display: "none" }),
           }}
           onClick={() => signOut()}
         >
@@ -313,7 +333,7 @@ export default function ({ children }) {
               height: 0.7,
               display: "flex",
               alignItems: "center",
-              ...(!open && { display: "none" }),
+             
             }}
           >
             <img
