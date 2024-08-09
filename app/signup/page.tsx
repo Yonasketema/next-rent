@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { SyntheticEvent, useState } from "react";
 import {
   Container,
   Box,
@@ -12,8 +13,9 @@ import {
 } from "@mui/material";
 
 import Image from "next/image";
-
+import { signup } from "@/lib/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const [formValues, setFormValues] = useState({
@@ -23,11 +25,35 @@ export default function Signup() {
     location: "",
     phone: "",
   });
+  const [checked, setChecked] = useState(false);
+
+  const handleCheckChange = (event) => {
+    setChecked(event.target.checked);
+  };
 
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormValues({ ...formValues, [id]: value });
   };
+
+  const router = useRouter();
+
+  async function handleSubmit(e: SyntheticEvent) {
+    e.preventDefault();
+
+    try {
+      const newUser = await signup(
+        formValues.phone,
+        formValues.email,
+        formValues.password,
+        formValues.location
+      );
+
+      if (newUser) {
+        router.push("/login");
+      }
+    } catch (error) {}
+  }
 
   return (
     <Box display="flex" height="100vh">
@@ -82,6 +108,7 @@ export default function Signup() {
               gap: 12,
               marginTop: 21,
             }}
+            onSubmit={handleSubmit}
           >
             <TextField
               fullWidth
@@ -129,7 +156,14 @@ export default function Signup() {
               onChange={handleChange}
             />
             <FormControlLabel
-              control={<Checkbox name="terms" color="primary" />}
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={handleCheckChange}
+                  name="terms"
+                  color="primary"
+                />
+              }
               label="I accept the Terms and Conditions"
             />
             <Button
@@ -139,6 +173,8 @@ export default function Signup() {
                 backgroundColor: "#00ABFF",
               }}
               fullWidth
+              disabled={!checked}
+              type="submit"
             >
               SIGN IN
             </Button>

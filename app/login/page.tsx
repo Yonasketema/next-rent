@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import {
   Container,
   Box,
@@ -8,12 +8,14 @@ import {
   Divider,
   TextField,
 } from "@mui/material";
+import { signIn } from "next-auth/react";
 
 import Image from "next/image";
-import FormInput from "@/components/ui/FormInput";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -23,6 +25,22 @@ export default function Login() {
     const { id, value } = e.target;
     setFormValues({ ...formValues, [id]: value });
   };
+
+  async function handleSubmit(e: SyntheticEvent) {
+    e.preventDefault();
+
+    const signResponse = await signIn("credentials", {
+      email: formValues.email,
+      password: formValues.password,
+      redirect: false,
+    });
+    if (signResponse && signResponse.ok) {
+      router.push("/dashboard");
+    } else {
+      console.log("sign error", signResponse?.error);
+      // TODO:toast
+    }
+  }
 
   return (
     <Box display="flex" height="100vh">
@@ -69,8 +87,15 @@ export default function Login() {
           <Typography variant="h5" gutterBottom>
             Login to Book Rent
           </Typography>
-          <Divider />
-          <form style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <Divider sx={{ marginBottom: 4 }} />
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
             <TextField
               size="small"
               label="Email address"
@@ -96,6 +121,7 @@ export default function Login() {
                 backgroundColor: "#00ABFF",
               }}
               fullWidth
+              type="submit"
             >
               LOGIN
             </Button>
