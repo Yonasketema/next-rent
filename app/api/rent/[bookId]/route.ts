@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { bookSchema } from "@/lib/zodSchemas";
+import { ability } from "@/lib/casl";
 
 export async function POST(
   req: Request,
   { params }: { params: { bookId: string } }
 ) {
   try {
-    //FIXME:   role user , userId   ??? status code
+    const authUser = JSON.parse(req.headers.get('user') as string)
+
+    if(!authUser || !ability(authUser).can('create','Rent')){
+
+       
+        return NextResponse.json({
+          data: {
+            error: true,
+            message: "Unauthenticated",
+            status: 401,
+          },
+        });
+    }
+
 
     const book = await prisma.book.findUnique({
       where: { id: params.bookId },
@@ -26,7 +39,7 @@ export async function POST(
     await prisma.rent.create({
       data: {
         bookId: params.bookId,
-        renterId: "clzjwjsny0000xwfcq2s7fw9y",
+        renterId: authUser.user?.id,
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)), // 1 month rental
         price: book.price,

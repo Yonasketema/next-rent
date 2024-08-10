@@ -1,22 +1,28 @@
-/**
- *
- *
- *
- *
- *
- */
+ 
 
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
-import { getCurrentSignInUserServer } from "@/lib/authUser";
+import { ability } from "@/lib/casl";
+
+
 
 export async function GET(req: Request) {
+
   try {
+  const authUser = JSON.parse(req.headers.get('user') as string)
+   
+
+  if(!authUser || !ability(authUser)){
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "Unauthenticated",
+          status: 401,
+        },
+      });
+  }
     const books = await prisma.book.findMany({
-      where: {
-        status: "AVAILABLE",
-      },
       include: {
         category: true,
         owner: true,
@@ -43,25 +49,38 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   // can(user role is owner and available)
   // FIXME: ownerId
-  const user = await getCurrentSignInUserServer();
-
+  
+  
   try {
-    // const parsed = bookSchema.safeParse(await req.json());
-    // if (!parsed.success) {
-    //   return NextResponse.json(
-    //     { message: parsed.error.message },
-    //     { status: 400 }
-    //   );
-    // }
-    const { title, author, categoryId, price, quantity, ownerId } =
-      await req.json();
+    const authUser = JSON.parse(req.headers.get('user') as string)
+
+    if(!authUser || !ability(authUser).can("create", "Book")){
+    
+       
+        return NextResponse.json({
+          data: {
+            error: true,
+            message: "Unauthenticated",
+            status: 401,
+          },
+        });
+    }
+    const parsed = bookSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: parsed.error.message },
+        { status: 400 }
+      );
+    }
+    const { title, author, categoryId, price, quantity } = parsed.data;
+      
 
     const books = await prisma.book.create({
       data: {
         title,
         author,
         categoryId,
-        ownerId,
+        ownerId:authUser?.user?.id,
         price,
         quantity,
       },

@@ -2,9 +2,10 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
 import bcrypt from "bcryptjs";
+// import jwt from "jsonwebtoken"
 import prisma from "@/lib/prisma";
 
-export const auth: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -43,9 +44,23 @@ export const auth: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
+  secret:process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
+  // jwt: {
+  //   maxAge: 60 * 60 * 24 * 30,
+  //   async encode({ secret, token }) {
+  //     return  await jwt.sign(token, secret)
+  //   }, 
+  //   async decode({ secret, token }) {
+     
+  //     return  await jwt.verify(token, secret)
+
+      
+  //   },
+  // },
   callbacks: {
     async jwt({ token, user }) {
+       
       return { ...token, ...user };
     },
     async session({ session, token }: { session: any; token: any }) {
@@ -57,6 +72,9 @@ export const auth: NextAuthOptions = {
   },
 };
 
-export const handler = NextAuth(auth);
+const handler  = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+// export const {auth} = handler
+
+ export { handler as GET, handler as POST };
+
