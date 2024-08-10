@@ -131,7 +131,7 @@ export default function Login() {
               align="center"
               marginTop={2}
             >
-              Don't have an account?{" "}
+              Don&#39;t have an account?
               <Link
                 href="/signup"
                 style={{ color: "#00ABFF", textDecoration: "underline" }}

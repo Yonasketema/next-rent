@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Image from "next/image";
 
  
 type TableProps = {
@@ -73,7 +74,8 @@ export default function DashBoardTable({ books }: TableProps) {
                 height: 14,
               }}
             >
-              <img
+              <Image
+                alt=""
                 style={{
                   display: "flex",
                   height: "inherit",

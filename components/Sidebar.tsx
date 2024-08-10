@@ -17,6 +17,7 @@ import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Header from "./Header";
+import Image from "next/image";
 
 const drawerWidth = 240;
 
@@ -126,7 +127,7 @@ const links_bottoms = [
   },
 ];
 
-export default function ({ children }) {
+export default function MiniDrawer({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const session = useSession();
@@ -188,7 +189,8 @@ export default function ({ children }) {
                 height: 29,
               }}
             >
-              <img
+              <Image 
+               alt=""
                 style={{
                   display: "flex",
                   height: "inherit",
@@ -240,7 +242,8 @@ export default function ({ children }) {
                             height:20
                           }}
                         >
-                          <img
+                          <Image 
+                           alt=""
                             style={{
                               display: "flex",
                               height: "inherit",
@@ -296,7 +299,8 @@ export default function ({ children }) {
                         height:20
                       }}
                     >
-                      <img
+                      <Image 
+                       alt=""
                         style={{
                           display: "flex",
                           height: "inherit",
@@ -336,7 +340,8 @@ export default function ({ children }) {
              
             }}
           >
-            <img
+            <Image 
+             alt=""
               style={{
                 display: "flex",
                 height: "inherit",
