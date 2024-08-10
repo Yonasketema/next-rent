@@ -12,7 +12,7 @@ type ToggleSwitchProps = {
 const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
   const [checked, setChecked] = useState(status === "ACTIVE");
 
-  console.log("ss", status, ownerId);
+ 
 
   const handleChange = async (event) => {
     setChecked(event.target.checked);

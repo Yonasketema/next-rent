@@ -3,11 +3,22 @@ import {
   Box,
 } from "@mui/material";
 import BookTable from "@/components/BookTable";
+import { getCurrentSignInUserServer } from "@/lib/authUser";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 export default async function Books() {
+
+  const user = await getCurrentSignInUserServer();
+  
+  if (user?.user?.role !== "ADMIN") return redirect("/login?callbackUrl=/dashboard");
+
   let book = await fetch(`http://localhost:3000/api/books`, {
+    headers:new Headers(headers()),
     cache: "no-store",
   });
+
+  
 
   book = await book.json();
 
