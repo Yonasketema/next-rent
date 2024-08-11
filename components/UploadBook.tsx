@@ -94,7 +94,7 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
           
       </Grid>
 
-      {/* Right Half - Form Fields */}
+     
       <Grid item xs={12} sm={6}>
         <form>
           <TextField

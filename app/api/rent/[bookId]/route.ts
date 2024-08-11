@@ -39,7 +39,7 @@ export async function POST(
     await prisma.rent.create({
       data: {
         bookId: params.bookId,
-        renterId: authUser.user?.id,
+        renterId: authUser.id,
         startDate: new Date(),
         endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)), // 1 month rental
         price: book.price,

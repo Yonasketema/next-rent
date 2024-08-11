@@ -24,7 +24,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       data: {
-        _error: false,
+        error: false,
         owners,
       },
     });
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       data: {
         error: true,
-        message: "An error occurred while fetching books.",
+        message: "An error occurred while fetching.",
         status: 500,
       },
     });

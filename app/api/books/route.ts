@@ -77,12 +77,15 @@ export async function POST(req: Request) {
     const { title, author, categoryId, price, quantity } = parsed.data;
       
 
+
+
+ 
     const books = await prisma.book.create({
       data: {
         title,
         author,
         categoryId,
-        ownerId:authUser?.user?.id,
+        ownerId:authUser.id,
         price,
         quantity,
       },

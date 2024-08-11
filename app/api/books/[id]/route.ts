@@ -81,7 +81,7 @@ export async function PUT(
     const books = await prisma.book.update({
       where: {
         id: params.id,
-        ownerId: authUser?.user?.id,
+        ownerId: authUser?.id,
       },
       data: { title, status,  price },
     });
@@ -127,7 +127,7 @@ export async function DELETE(
     await prisma.book.delete({
       where: {
         id: params.id,
-        ownerId: authUser?.user?.id ,
+        ownerId: authUser.id ,
       },
     });
 
