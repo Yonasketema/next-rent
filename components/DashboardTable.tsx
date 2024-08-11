@@ -22,6 +22,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
 import SvgIcon from "./SvgIcon";
+import DeleteButton from "./DeleteButton";
 
  
 type TableProps = {
@@ -122,11 +123,7 @@ export default function DashBoardTable({ books }: TableProps) {
             <EditIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+         <DeleteButton type="BOOK" bookId={row.original.id}  sx={{ marginRight: 3 }} />
       </Box>
     ),
     renderTopToolbarCustomActions: () => (

@@ -13,6 +13,7 @@ export const  ability = (user:any) =>
       can("read:income", "Book");
       can("update", "Book");
       can("create", "Book");
+      can('delete','User')
       can("delete", "Book");
     }
     if (user.role === "ADMIN") {

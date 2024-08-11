@@ -22,6 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
+import DeleteButton from "./DeleteButton";
 
  
 type TableProps = {
@@ -111,9 +112,8 @@ export default function OwnerTable({ owners }: TableProps) {
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
-        <IconButton aria-label="delete" sx={{ color: "red", marginRight: 7 }}>
-          <DeleteIcon />
-        </IconButton>
+        <DeleteButton type="USER" userId={row.original.id}  sx={{ marginRight: 3 }} />
+        
         <ApproveButton
           type="USER"
           isApproved={row?.original.approved}

@@ -22,6 +22,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
+import DeleteButton from "./DeleteButton";
 
 type TableProps = {
   books: Book[];
@@ -124,9 +125,9 @@ export default function BookTable({ books }: TableProps) {
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
-        <IconButton aria-label="delete" sx={{ marginRight: 7, color: "red" }}>
-          <DeleteIcon />
-        </IconButton>
+        {/* <IconButton aria-label="delete" sx={{ marginRight: 7, color: "red" }}> */}
+         <DeleteButton type="BOOK" bookId={row.original.id} sx={{ marginRight: 3}} />
+          
         <ApproveButton
           type="BOOK"
           isApproved={row?.original.approved}

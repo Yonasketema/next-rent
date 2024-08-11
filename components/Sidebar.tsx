@@ -281,6 +281,8 @@ export default function ({ children }) {
             textTransform: "none",
             color: "white",
             marginBottom:"30%",
+            display:"flex",
+            gap:1.2,
  
             ...(!open && { display: "none" }),
           }}
