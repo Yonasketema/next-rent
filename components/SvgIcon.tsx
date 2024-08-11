@@ -30,7 +30,7 @@ export default function SvgIcon({
           width: "inherit",
       
       }}
-      src={src}
+      src={`/static/${src}`}
     />
   </Icon>
 }

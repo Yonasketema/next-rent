@@ -65,7 +65,7 @@ export default function Signup() {
         alignItems="center"
       >
         <Image
-          src="/book-logo-lg.svg"
+          src="/static/book-logo-lg.svg"
           alt="Book Logo"
           width={377.66}
           height={209}
@@ -89,7 +89,7 @@ export default function Signup() {
             }}
           >
             <Image
-              src="/book-logo-small.svg"
+              src="/static/book-logo-small.svg"
               alt="Book Logo"
               width={50.66}
               height={39}

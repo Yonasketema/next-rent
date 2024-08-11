@@ -125,7 +125,7 @@ export default function BookTable({ books }: TableProps) {
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
-        {/* <IconButton aria-label="delete" sx={{ marginRight: 7, color: "red" }}> */}
+       
          <DeleteButton type="BOOK" bookId={row.original.id} sx={{ marginRight: 3}} />
           
         <ApproveButton

@@ -10,3 +10,11 @@ export const bookSchema = z.object({
     .int()
     .positive({ message: "Quantity must be a positive integer" }),
 });
+
+export const bookUpdateSchema = z.object({
+  title: z.string().min(1, { message: "Title must not be empty" }),
+  price: z.number().positive({ message: "Price must be a positive number" }),
+  status:z.enum(["AVAILABLE",
+    "RENTED",
+    "UNAVAILABLE"])
+});

@@ -15,8 +15,8 @@ const unAuthenticatedRoutes = [
   '/auth/**',
   '/login',
   '/signup',
-  '/_next/static',
-  '/_next/image',
+  '/static/**',
+  '/_next/**',
   'favicon.ico'
 ];
 
