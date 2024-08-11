@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { createURL } from "@/lib/api";
 
 
 type DeleteButtonProps = {
@@ -18,14 +19,14 @@ const DeleteButton = ({
   sx
 }: DeleteButtonProps) => {
   const handleDeleteUser = async (event) => {
-    await fetch(`http://localhost:3000/api/users/${userId}`, {
+    await fetch(createURL(`/api/users/${userId}`), {
       method: "DELETE",
       
     });
   };
 
   const handleDeleteBook = async (event) => {
-    await fetch(`http://localhost:3000/api/books/${bookId}`, {
+    await fetch(createURL(`/api/books/${bookId}`), {
       method: "DELETE",
       
     });

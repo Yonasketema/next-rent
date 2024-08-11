@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Switch, Typography, Box } from "@mui/material";
 
 import CheckIcon from "@mui/icons-material/Check";
+import { createURL } from "@/lib/api";
 
 type ToggleSwitchProps = {
   status: "ACTIVE" | "DISABLED";
@@ -16,7 +17,7 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
 
   const handleChange = async (event) => {
     setChecked(event.target.checked);
-    await fetch(`http://localhost:3000/api/admin/owners/${ownerId}`, {
+    await fetch(createURL(`/api/admin/owners/${ownerId}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

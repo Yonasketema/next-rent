@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Grid, TextField, Button, Modal, Typography, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { Category } from '@prisma/client';
 import Image from 'next/image';
+import { createURL } from '@/lib/api';
 
 
 type BookUploadProps ={
@@ -30,7 +31,7 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
 
     const handleUpload = async () => {
 
-    await fetch(`http://localhost:3000/api/books`, {
+    await fetch(createURL(`/api/books`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import OwnerTable from "@/components/OwnerTable";
 import { redirect } from "next/navigation";
 import { getCurrentSignInUserServer } from "@/lib/authUser";
 import { headers } from "next/headers";
+import { createURL } from "@/lib/api";
 
 const Owners = async () => {
 
@@ -13,7 +14,7 @@ const Owners = async () => {
   
   if (user?.user?.role !== "ADMIN") return redirect("/login?callbackUrl=/dashboard");
   
-  let owners = await fetch("http://localhost:3000/api/admin/owners", {
+  let owners = await fetch(createURL("/api/admin/owners"), {
     headers:new Headers(headers()),
     cache: "no-store",
   });

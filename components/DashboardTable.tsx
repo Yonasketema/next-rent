@@ -22,6 +22,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SvgIcon from "./SvgIcon";
 import DeleteButton from "./DeleteButton";
+import { createURL } from "@/lib/api";
 
  
  
@@ -42,7 +43,7 @@ export default function DashBoardTable({ books }: TableProps) {
 
  
     setIsEditingBook(true)
-     await fetch(`http://localhost:3000/api/books/${values.id}`, {
+     await fetch(createURL(`/books/${values.id}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

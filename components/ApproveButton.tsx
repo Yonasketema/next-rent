@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@mui/material";
+import { createURL } from "@/lib/api";
 
 type ApproveButtonProps = {
   type: "BOOK" | "USER";
@@ -16,7 +17,7 @@ const ApproveButton = ({
   isApproved,
 }: ApproveButtonProps) => {
   const handleApproveUser = async (event) => {
-    await fetch(`http://localhost:3000/api/admin/approve/owner/${ownerId}`, {
+    await fetch(createURL(`/api/admin/approve/owner/${ownerId}`), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +29,7 @@ const ApproveButton = ({
   };
 
   const handleApproveBook = async (event) => {
-    await fetch(`http://localhost:3000/api/admin/approve/books/${bookId}`, {
+    await fetch(createURL(`/api/admin/approve/books/${bookId}`), {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

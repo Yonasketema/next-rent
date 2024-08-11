@@ -1,3 +1,7 @@
+export const createURL= (path:string)=>{
+  return `${process.env.NEXTAUTH_URL}${path}`
+}
+
 export const signup = async (
   phone: string,
   email: string,
@@ -5,7 +9,7 @@ export const signup = async (
   location: string
 ) => {
   const res = await fetch(
-    new Request(`http://localhost:3000/api/auth/signup`),
+    new Request(createURL('/api/auth/signup')),
     {
       method: "POST",
       headers: {
