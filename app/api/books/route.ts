@@ -66,6 +66,8 @@ export async function POST(req: Request) {
         });
     }
     const parsed = bookSchema.safeParse(await req.json());
+
+    
     if (!parsed.success) {
       return NextResponse.json(
         { message: parsed.error.message },

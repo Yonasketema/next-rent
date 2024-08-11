@@ -1,5 +1,9 @@
+import BookUploadPage from "@/components/UploadBook";
 import { getCurrentSignInUserServer } from "@/lib/authUser";
-import { redirect } from "next/dist/server/api-utils";
+import prisma from "@/lib/prisma";
+import { Box } from "@mui/material";
+import { redirect } from "next/navigation";
+ 
 import React from "react";
 
 async function page() {
@@ -8,8 +12,13 @@ async function page() {
   
   if (user?.user?.role !== "OWNER") return redirect("/login?callbackUrl=/dashboard");
 
+
+ const categories = await prisma.category.findMany()
+
   
-  return <div>Upload books</div>;
+  return <Box  sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
+     <BookUploadPage categories={categories}/>
+  </Box>;
 }
 
 export default page;

@@ -280,7 +280,7 @@ export default function ({ children }) {
             background: "#FFFFFF33",
             textTransform: "none",
             color: "white",
-            marginBottom:"30%",
+            marginBottom:"20%",
             display:"flex",
             gap:1.2,
  
