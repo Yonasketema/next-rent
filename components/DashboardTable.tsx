@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   MaterialReactTable,
   MRT_EditActionButtons,
   useMaterialReactTable,
   type MRT_ColumnDef,
+  MRT_TableOptions,
 } from "material-react-table";
 import { Book } from "@prisma/client";
 import {
@@ -19,24 +20,63 @@ import {
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Image from "next/image";
 import SvgIcon from "./SvgIcon";
 import DeleteButton from "./DeleteButton";
 
+ 
  
 type TableProps = {
   books: Book[];
 };
 
 export default function DashBoardTable({ books }: TableProps) {
+
+  const [isEditingBook,setIsEditingBook] = useState(false)
+
+  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
+    values,
+    table,
+  }) => {
+     
+   
+
+ 
+    setIsEditingBook(true)
+     await fetch(`http://localhost:3000/api/books/${values.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title:values.bookName, status:values.Status, price:values.Price }),
+    });
+
+    setIsEditingBook(false)
+    table.setEditingRow(null); //exit editing mode
+  };
+
+
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
+      {
+        accessorFn: (row) => row.id,
+        header:'id',
+        Edit: () => null,
+        enableEditing: false,
+        Cell:()=>null
+      },
+      {
+        accessorFn: (row) => row.categoryId,
+        header:'categoryId',
+        Edit: () => null,
+        enableEditing: false,
+        Cell:()=>null
+      },
       {
         accessorFn: (row, i) => (i < 10 ? `0${++i}` : ++i),
         accessorKey: "no",
         header: "No.",
         maxSize: 50,
+        enableEditing: false,
       },
       {
         accessorFn: (row, i) => row.id,
@@ -65,8 +105,13 @@ export default function DashBoardTable({ books }: TableProps) {
         maxSize: 130,
       },
       {
+        accessorFn: (row) => row.status,
         header: "Status",
         maxSize: 100,
+        editVariant:'select',
+        editSelectOptions:["AVAILABLE",
+          "RENTED",
+          "UNAVAILABLE"],
 
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
@@ -79,15 +124,21 @@ export default function DashBoardTable({ books }: TableProps) {
         ),
       },
       {
-        accessorFn: (row) => row.price + " Birr",
+        accessorFn: (row) => row.price ,
         header: "Price",
         maxSize: 100,
+        Cell: ({ row }) => <p>{row.original.price} Birr</p>
+      
       },
     ],
     []
   );
 
   const table = useMaterialReactTable({
+    state:{
+      // isLoading: true,
+      isSaving: isEditingBook
+    },
     columns,
     enableRowActions: true,
     enableColumnActions: false,
@@ -96,9 +147,11 @@ export default function DashBoardTable({ books }: TableProps) {
     enableSorting: false,
     initialState: {
       density: "compact",
-      columnOrder: ["no", "bookNo", "bookName", "Status", "Price", "Actions"],
+      columnVisibility:{id:false, categoryId:false},
+      columnOrder: ["no", "bookNo", "bookName", "Status", "Price", "Actions","id",'categoryId'],
     },
     data: books,
+    onEditingRowSave: handleSaveBook,
     createDisplayMode: "modal",
     editDisplayMode: "modal",
     enableEditing: true,

@@ -1,3 +1,4 @@
+import { ability } from "@/lib/casl";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -6,8 +7,20 @@ export async function PUT(
   { params }: { params: { userId: string } }
 ) {
   try {
-    //FIXME:   !owner Id from req
+     
+    const authUser = JSON.parse(req.headers.get('user') as string)
 
+    if(!authUser || !ability(authUser).can('update','User')){
+
+       
+        return NextResponse.json({
+          data: {
+            error: true,
+            message: "Unauthenticated",
+            status: 401,
+          },
+        });
+    }
     const { status } = await req.json();
 
     const user = await prisma.user.update({

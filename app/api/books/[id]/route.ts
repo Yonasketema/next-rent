@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { bookSchema } from "@/lib/zodSchemas";
+import { bookSchema, bookUpdateSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
 
 export async function GET(
@@ -49,7 +49,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const parsed = bookSchema.safeParse(await req.json());
+    const parsed = bookUpdateSchema.safeParse(await req.json());
 
     //FIXME:   !owner Id from req
     const authUser = JSON.parse(req.headers.get('user') as string)
@@ -74,14 +74,16 @@ export async function PUT(
       );
     }
 
-    const { title, author, categoryId, price, quantity } = parsed.data;
+    const { title, status , price } = parsed.data;
+
+   
 
     const books = await prisma.book.update({
       where: {
         id: params.id,
         ownerId: authUser?.user?.id,
       },
-      data: { title, author, categoryId, price, quantity },
+      data: { title, status,  price },
     });
 
     return NextResponse.json({
