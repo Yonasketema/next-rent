@@ -21,6 +21,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Image from "next/image";
+import SvgIcon from "./SvgIcon";
 
  
 type TableProps = {
@@ -68,24 +69,9 @@ export default function DashBoardTable({ books }: TableProps) {
 
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
-            <Icon
-              sx={{
-                textAlign: "center",
-                height: 14,
-              }}
-            >
-              <Image
-                alt=""
-                style={{
-                  display: "flex",
-                  height: "inherit",
-                  width: "inherit",
-                }}
-                src={`/icons/${
-                  row.original.status === "RENTED" ? "rented" : "free"
-                }.svg`}
-              />
-            </Icon>
+            <SvgIcon height={14} src={`/icons/${
+        row.original.status === "RENTED" ? "rented" : "free"
+      }.svg`} />
 
             <span>{row.original.status === "RENTED" ? "rented" : "free"}</span>
           </Box>

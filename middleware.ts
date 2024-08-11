@@ -15,7 +15,9 @@ const unAuthenticatedRoutes = [
   '/auth/**',
   '/login',
   '/signup',
-  '/((?!_next/static|favicon.ico).*)'
+  '/_next/static',
+  '/_next/image',
+  'favicon.ico'
 ];
 
 export default async function middleware(req: NextRequest) {

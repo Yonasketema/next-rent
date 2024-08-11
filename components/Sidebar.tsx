@@ -17,7 +17,7 @@ import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Header from "./Header";
-import Image from "next/image";
+import SvgIcon from "./SvgIcon";
 
 const drawerWidth = 240;
 
@@ -127,7 +127,7 @@ const links_bottoms = [
   },
 ];
 
-export default function MiniDrawer({ children }) {
+export default function ({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const session = useSession();
@@ -182,23 +182,8 @@ export default function MiniDrawer({ children }) {
               color: "#00ABFF",
             }}
           >
-            <Icon
-              sx={{
-                textAlign: "center",
-                width: 40,
-                height: 29,
-              }}
-            >
-              <Image 
-               alt=""
-                style={{
-                  display: "flex",
-                  height: "inherit",
-                  width: "inherit",
-                }}
-                src={`/book-logo-xs.svg`}
-              />
-            </Icon>
+           
+            <SvgIcon    src={`/book-logo-xs.svg`} width={40} height={29} />
             <Typography>Book Rent</Typography>
           </Box>
         </DrawerHeader>
@@ -235,23 +220,8 @@ export default function MiniDrawer({ children }) {
                           justifyContent: "center",
                         }}
                       >
-                        <Icon
-                          sx={{
-                            textAlign: "center",
-                            width:20,
-                            height:20
-                          }}
-                        >
-                          <Image 
-                           alt=""
-                            style={{
-                              display: "flex",
-                              height: "inherit",
-                              width: "inherit",
-                            }}
-                            src={`/icons/${text.icon}.svg`}
-                          />
-                        </Icon>
+                         
+                        <SvgIcon src={`/icons/${text.icon}.svg`} width={20} height={29} />
                       </ListItemIcon>
                       <ListItemText
                         primary={text.label}
@@ -292,23 +262,8 @@ export default function MiniDrawer({ children }) {
                       justifyContent: "center",
                     }}
                   >
-                    <Icon
-                      sx={{
-                        textAlign: "center",
-                        width:20,
-                        height:20
-                      }}
-                    >
-                      <Image 
-                       alt=""
-                        style={{
-                          display: "flex",
-                          height: "inherit",
-                          width: "inherit",
-                        }}
-                        src={`/icons/${text.icon}.svg`}
-                      />
-                    </Icon>
+                    
+                    <SvgIcon src={`/icons/${text.icon}.svg`} width={20} height={20} />
                   </ListItemIcon>
                   <ListItemText
                     primary={text.label}
@@ -331,25 +286,9 @@ export default function MiniDrawer({ children }) {
           }}
           onClick={() => signOut()}
         >
-          <Icon
-            sx={{
-              textAlign: "center",
-              height: 0.7,
-              display: "flex",
-              alignItems: "center",
-             
-            }}
-          >
-            <Image 
-             alt=""
-              style={{
-                display: "flex",
-                height: "inherit",
-                width: "inherit",
-              }}
-              src={`/icons/Logout.svg`}
-            />
-          </Icon>
+          
+         
+          <SvgIcon  src={`/icons/Logout.svg`}  />
           Logout
         </Button>
       </Drawer>
