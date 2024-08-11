@@ -1,5 +1,3 @@
-// components/BookStatusTable.js
-
 import * as React from "react";
 import {
   Table,

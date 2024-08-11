@@ -1,6 +1,4 @@
 "use client";
-// components/FloatingLabelInput.js
-
 import { TextField } from "@mui/material";
 
 const FormInput = ({ label, type = "text", id, value, onChange }) => {

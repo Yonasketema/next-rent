@@ -24,53 +24,49 @@ import SvgIcon from "./SvgIcon";
 import DeleteButton from "./DeleteButton";
 import { createURL } from "@/lib/api";
 
- 
- 
 type TableProps = {
   books: Book[];
 };
 
 export default function DashBoardTable({ books }: TableProps) {
+  const [isEditingBook, setIsEditingBook] = useState(false);
 
-  const [isEditingBook,setIsEditingBook] = useState(false)
-
-  const handleSaveBook: MRT_TableOptions<Book>['onEditingRowSave'] = async ({
+  const handleSaveBook: MRT_TableOptions<Book>["onEditingRowSave"] = async ({
     values,
     table,
   }) => {
-     
-   
-
- 
-    setIsEditingBook(true)
-     await fetch(createURL(`/books/${values.id}`), {
+    setIsEditingBook(true);
+    await fetch(createURL(`/api/books/${values.id}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title:values.bookName, status:values.Status, price:values.Price }),
+      body: JSON.stringify({
+        title: values.bookName,
+        status: values.Status,
+        price: values.Price,
+      }),
     });
 
-    setIsEditingBook(false)
+    setIsEditingBook(false);
     table.setEditingRow(null); //exit editing mode
   };
-
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
         accessorFn: (row) => row.id,
-        header:'id',
+        header: "id",
         Edit: () => null,
         enableEditing: false,
-        Cell:()=>null
+        Cell: () => null,
       },
       {
         accessorFn: (row) => row.categoryId,
-        header:'categoryId',
+        header: "categoryId",
         Edit: () => null,
         enableEditing: false,
-        Cell:()=>null
+        Cell: () => null,
       },
       {
         accessorFn: (row, i) => (i < 10 ? `0${++i}` : ++i),
@@ -109,36 +105,36 @@ export default function DashBoardTable({ books }: TableProps) {
         accessorFn: (row) => row.status,
         header: "Status",
         maxSize: 100,
-        editVariant:'select',
-        editSelectOptions:["AVAILABLE",
-          "RENTED",
-          "UNAVAILABLE"],
+        editVariant: "select",
+        editSelectOptions: ["AVAILABLE", "RENTED", "UNAVAILABLE"],
 
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
-            <SvgIcon height={14} src={`/icons/${
-        row.original.status === "RENTED" ? "rented" : "free"
-      }.svg`} />
+            <SvgIcon
+              height={14}
+              src={`/icons/${
+                row.original.status === "RENTED" ? "rented" : "free"
+              }.svg`}
+            />
 
             <span>{row.original.status === "RENTED" ? "rented" : "free"}</span>
           </Box>
         ),
       },
       {
-        accessorFn: (row) => row.price ,
+        accessorFn: (row) => row.price,
         header: "Price",
         maxSize: 100,
-        Cell: ({ row }) => <p>{row.original.price} Birr</p>
-      
+        Cell: ({ row }) => <p>{row.original.price} Birr</p>,
       },
     ],
-    []
+    [],
   );
 
   const table = useMaterialReactTable({
-    state:{
+    state: {
       // isLoading: true,
-      isSaving: isEditingBook
+      isSaving: isEditingBook,
     },
     columns,
     enableRowActions: true,
@@ -148,8 +144,17 @@ export default function DashBoardTable({ books }: TableProps) {
     enableSorting: false,
     initialState: {
       density: "compact",
-      columnVisibility:{id:false, categoryId:false},
-      columnOrder: ["no", "bookNo", "bookName", "Status", "Price", "Actions","id",'categoryId'],
+      columnVisibility: { id: false, categoryId: false },
+      columnOrder: [
+        "no",
+        "bookNo",
+        "bookName",
+        "Status",
+        "Price",
+        "Actions",
+        "id",
+        "categoryId",
+      ],
     },
     data: books,
     onEditingRowSave: handleSaveBook,
@@ -177,13 +182,17 @@ export default function DashBoardTable({ books }: TableProps) {
             <EditIcon />
           </IconButton>
         </Tooltip>
-         <DeleteButton type="BOOK" bookId={row.original.id}  sx={{ marginRight: 3 }} />
+        <DeleteButton
+          type="BOOK"
+          bookId={row.original.id}
+          sx={{ marginRight: 3 }}
+        />
       </Box>
     ),
     renderTopToolbarCustomActions: () => (
-      <Typography  color="#222" fontSize={16}  fontWeight="700" >
-      Live Book Status
-  </Typography>
+      <Typography color="#222" fontSize={16} fontWeight="700">
+        Live Book Status
+      </Typography>
     ),
     muiTableContainerProps: {
       sx: {
