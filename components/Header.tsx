@@ -2,10 +2,10 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+ 
 
-function Header() {
-  const session = useSession();
+function Header({role}:{role:string}) {
+  
   const pathName = usePathname();
 
   return (
@@ -16,7 +16,7 @@ function Header() {
         fontWeight="bold"
         textTransform="capitalize"
       >
-        {session.status !== "loading" && session.data?.user.role}
+        {role.toLocaleLowerCase()}
       </Typography>
       <Typography variant="h6" color="gray" textTransform="capitalize">
         {pathName}

@@ -12,10 +12,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Button, Icon } from "@mui/material";
+import { Button } from "@mui/material";
 import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Header from "./Header";
 import SvgIcon from "./SvgIcon";
 
@@ -127,10 +127,10 @@ const links_bottoms = [
   },
 ];
 
-export default function ({ children }) {
+export default function Sidebar ({ children ,user }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const session = useSession();
+  
 
   const pathName = usePathname();
 
@@ -190,7 +190,7 @@ export default function ({ children }) {
         <Divider color="gray" />
         <List>
           {links.map((text, index) => {
-            if (text.role.includes(session?.data?.user.role)) {
+            if (text.role.includes(user?.user.role)) {
               return (
                 <ListItem
                   key={text.link}
@@ -280,7 +280,7 @@ export default function ({ children }) {
             background: "#FFFFFF33",
             textTransform: "none",
             color: "white",
-            marginBottom:"20%",
+            marginBottom:"30%",
             display:"flex",
             gap:1.2,
  
@@ -309,7 +309,7 @@ export default function ({ children }) {
             backgroundColor: "white",
           }}
         >
-          <Header />
+          <Header role={user.user.role}/>
         </Box>
 
         {children}

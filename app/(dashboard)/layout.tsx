@@ -1,13 +1,16 @@
 import MiniDrawer from "@/components/Sidebar";
+import { getCurrentSignInUserServer } from "@/lib/authUser";
 
-export default function RootLayout({
+export default async function RootLayout({
+
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentSignInUserServer();
   return (
     <main>
-      <MiniDrawer>{children}</MiniDrawer>
+      <MiniDrawer user={user} >{children}</MiniDrawer>
     </main>
   );
 }
