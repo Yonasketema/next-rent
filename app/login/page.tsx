@@ -7,6 +7,7 @@ import {
   Button,
   Divider,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { signIn } from "next-auth/react";
 
@@ -20,6 +21,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -28,16 +30,20 @@ export default function Login() {
 
   async function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
-
+    setIsLoading(true);
     const signResponse = await signIn("credentials", {
       email: formValues.email,
       password: formValues.password,
       redirect: false,
     });
+    setIsLoading(false);
+
     if (signResponse && signResponse.ok) {
       router.push("/dashboard");
     } else {
       console.log("sign error", signResponse?.error);
+      setIsLoading(false);
+
       // TODO:toast
     }
   }
@@ -122,8 +128,9 @@ export default function Login() {
               }}
               fullWidth
               type="submit"
+              disabled={isLoading}
             >
-              LOGIN
+              {isLoading ? <CircularProgress size={21} /> : "LOGIN"}
             </Button>
             <Typography
               color="gray"

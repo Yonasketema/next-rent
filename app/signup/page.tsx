@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { SyntheticEvent, useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   TextField,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 
 import Image from "next/image";
@@ -26,6 +27,7 @@ export default function Signup() {
     phone: "",
   });
   const [checked, setChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCheckChange = (event) => {
     setChecked(event.target.checked);
@@ -42,17 +44,21 @@ export default function Signup() {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       const newUser = await signup(
         formValues.phone,
         formValues.email,
         formValues.password,
-        formValues.location
+        formValues.location,
       );
+      setIsLoading(false);
 
       if (newUser) {
         router.push("/login");
       }
-    } catch (error) {}
+    } catch (error) {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -171,12 +177,13 @@ export default function Signup() {
               color="primary"
               sx={{
                 backgroundColor: "#00ABFF",
+                p: 1,
               }}
               fullWidth
-              disabled={!checked}
+              disabled={!checked || isLoading}
               type="submit"
             >
-              SIGN IN
+              {isLoading ? <CircularProgress size={21} /> : "SIGN IN"}
             </Button>
             <Typography
               variant="body2"
