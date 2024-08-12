@@ -23,7 +23,8 @@ model User {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
-  Rent Rent[]
+  Rent   Rent[]
+  Income Income[]
 }
 
 model Book {
@@ -76,4 +77,12 @@ enum BookStatus {
   AVAILABLE
   RENTED
   UNAVAILABLE
+}
+
+model Income {
+  id        String   @id @default(cuid())
+  amount    Float
+  user      User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
 }
