@@ -18,75 +18,67 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ability } from "@/lib/casl";
- 
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: { userId: string } },
 ) {
   try {
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-
-    const authUser = JSON.parse(req.headers.get('user') as string)
-
-    if(!authUser || !ability(authUser).can('read:stats','Book')){
-
-       
-        return NextResponse.json({
-          data: {
-            error: true,
-            message: "Unauthenticated",
-            status: 401,
-          },
-        });
+    if (!authUser || !ability(authUser).can("read:stats", "Book")) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
+          status: 401,
+        },
+      });
     }
 
-
     const user = await prisma.user.findFirst({
-      where:{
-        id:params.userId,
-        approved:true
-      }
-    })
+      where: {
+        id: params.userId,
+        approved: true,
+      },
+    });
 
-    if(!user){
+    if (!user) {
       return NextResponse.json({
         data: {
           error: true,
           message: "You are disable my the admin.contact the admin",
-         
         },
       });
     }
-    const bookStats = await  prisma.book.groupBy({
-      by: ['categoryId'],
+    const bookStats = await prisma.book.groupBy({
+      by: ["categoryId"],
       where: {
-        status: 'AVAILABLE',
-        ownerId:params.userId,
-        approved:true
+        status: "AVAILABLE",
+        ownerId: params.userId,
+        approved: true,
       },
       _count: {
         _all: true,
       },
     });
 
- 
     const categories = await prisma.category.findMany({
       where: {
-        id: { in: bookStats.map(stat => stat.categoryId) }
-      }
+        id: { in: bookStats.map((stat) => stat.categoryId) },
+      },
     });
 
-  
-    const categoryMap = Object.fromEntries(categories.map(cat => [cat.id, cat.name]));
-  
+    const categoryMap = Object.fromEntries(
+      categories.map((cat) => [cat.id, cat.name]),
+    );
 
-    const books= bookStats.map(stat => ({
-      id:stat.categoryId,
+    const books = bookStats.map((stat) => ({
+      id: stat.categoryId,
       category: categoryMap[stat.categoryId],
       count: stat._count._all,
     }));
- 
+
     return NextResponse.json({
       data: {
         error: false,

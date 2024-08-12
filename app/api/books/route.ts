@@ -1,27 +1,21 @@
- 
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
 
-
-
 export async function GET(req: Request) {
-
   try {
-  const authUser = JSON.parse(req.headers.get('user') as string)
-   
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-  if(!authUser || !ability(authUser)){
+    if (!authUser || !ability(authUser).can("read", "Book")) {
       return NextResponse.json({
         data: {
           error: true,
-          message: "Unauthenticated",
+          message: "unauthorized",
           status: 401,
         },
       });
-  }
+    }
     const books = await prisma.book.findMany({
       include: {
         category: true,
@@ -47,45 +41,34 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  // can(user role is owner and available)
-  // FIXME: ownerId
-  
-  
   try {
-    const authUser = JSON.parse(req.headers.get('user') as string)
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if(!authUser || !ability(authUser).can("create", "Book")){
-    
-       
-        return NextResponse.json({
-          data: {
-            error: true,
-            message: "Unauthenticated",
-            status: 401,
-          },
-        });
+    if (!authUser || !ability(authUser).can("create", "Book")) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
+          status: 401,
+        },
+      });
     }
     const parsed = bookSchema.safeParse(await req.json());
 
-    
     if (!parsed.success) {
       return NextResponse.json(
         { message: parsed.error.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
     const { title, author, categoryId, price, quantity } = parsed.data;
-      
 
-
-
- 
     const books = await prisma.book.create({
       data: {
         title,
         author,
         categoryId,
-        ownerId:authUser.id,
+        ownerId: authUser.id,
         price,
         quantity,
       },

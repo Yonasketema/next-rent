@@ -1,6 +1,6 @@
 /***
  *
- *  setting edit user profile
+ *  TODO: setting ,edit user profile , get user rented book
  *
  *
  *
@@ -10,6 +10,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
+import { subject } from "@casl/ability";
 
 export async function DELETE(
   req: Request,
@@ -18,11 +19,14 @@ export async function DELETE(
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("delete", "User")) {
+    if (
+      !authUser ||
+      !ability(authUser).can("delete", subject("User", { id: params.userId }))
+    ) {
       return NextResponse.json({
         data: {
           error: true,
-          message: "Unauthenticated",
+          message: "unauthorized",
           status: 401,
         },
       });
@@ -34,7 +38,7 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({});
+    return NextResponse.json({ data: { error: false } });
   } catch (error) {
     return NextResponse.json({
       data: {

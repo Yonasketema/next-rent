@@ -4,22 +4,19 @@ import { NextResponse } from "next/server";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { userId: string } }
+  { params }: { params: { userId: string } },
 ) {
   try {
-     
-    const authUser = JSON.parse(req.headers.get('user') as string)
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if(!authUser || !ability(authUser).can('update','User')){
-
-       
-        return NextResponse.json({
-          data: {
-            error: true,
-            message: "Unauthenticated",
-            status: 401,
-          },
-        });
+    if (!authUser || !ability(authUser).can("update", "User")) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
+          status: 401,
+        },
+      });
     }
     const { status } = await req.json();
 

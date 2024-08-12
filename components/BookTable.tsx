@@ -117,17 +117,23 @@ export default function BookTable({ books }: TableProps) {
         </DialogActions>
       </>
     ),
-    renderTopToolbarCustomActions:()=>     <Typography  color="#222" fontSize={16}  fontWeight="700">
-    List of Books 
-  </Typography>,
+    renderTopToolbarCustomActions: () => (
+      <Typography color="#222" fontSize={16} fontWeight="700">
+        List of Books
+      </Typography>
+    ),
     renderRowActions: ({ row, table }) => (
       <Box>
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
-       
-         <DeleteButton type="BOOK" bookId={row.original.id} sx={{ marginRight: 3}} />
-          
+
+        <DeleteButton
+          type="BOOK"
+          bookId={row.original.id}
+          sx={{ marginRight: 3 }}
+        />
+
         <ApproveButton
           type="BOOK"
           isApproved={row?.original.approved}

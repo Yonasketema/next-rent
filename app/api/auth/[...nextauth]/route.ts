@@ -44,23 +44,21 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-  secret:process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   // jwt: {
   //   maxAge: 60 * 60 * 24 * 30,
   //   async encode({ secret, token }) {
   //     return  await jwt.sign(token, secret)
-  //   }, 
+  //   },
   //   async decode({ secret, token }) {
-     
+
   //     return  await jwt.verify(token, secret)
 
-      
   //   },
   // },
   callbacks: {
     async jwt({ token, user }) {
-       
       return { ...token, ...user };
     },
     async session({ session, token }: { session: any; token: any }) {
@@ -72,9 +70,8 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-const handler  = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
 
 // export const {auth} = handler
 
- export { handler as GET, handler as POST };
-
+export { handler as GET, handler as POST };

@@ -4,23 +4,20 @@ import { ability } from "@/lib/casl";
 
 export async function POST(
   req: Request,
-  { params }: { params: { bookId: string } }
+  { params }: { params: { bookId: string } },
 ) {
   try {
-    const authUser = JSON.parse(req.headers.get('user') as string)
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if(!authUser || !ability(authUser).can('create','Rent')){
-
-       
-        return NextResponse.json({
-          data: {
-            error: true,
-            message: "Unauthenticated",
-            status: 401,
-          },
-        });
+    if (!authUser || !ability(authUser).can("create", "Rent")) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
+          status: 401,
+        },
+      });
     }
-
 
     const book = await prisma.book.findUnique({
       where: { id: params.bookId },
@@ -46,7 +43,14 @@ export async function POST(
       },
     });
 
-    const rent = await prisma.book.update({
+    await prisma.income.create({
+      data: {
+        amount: book.price,
+        ownerId: book.ownerId,
+      },
+    });
+
+    await prisma.book.update({
       where: { id: params.bookId },
       data: {
         status: book.quantity - 1 === 0 ? "RENTED" : "AVAILABLE",
@@ -63,7 +67,7 @@ export async function POST(
     return NextResponse.json({
       data: {
         error: true,
-        message: "An error occurred while update books.",
+        message: error.message,
         status: 500,
       },
     });

@@ -4,22 +4,19 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { bookId: string } }
+  { params }: { params: { bookId: string } },
 ) {
   try {
-  
-    const authUser = JSON.parse(req.headers.get('user') as string)
+    const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if(!authUser || !ability(authUser).can('approve','Book')){
-
-       
-        return NextResponse.json({
-          data: {
-            error: true,
-            message: "Unauthenticated",
-            status: 401,
-          },
-        });
+    if (!authUser || !ability(authUser).can("approve", "Book")) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
+          status: 401,
+        },
+      });
     }
 
     const { approved } = await req.json();

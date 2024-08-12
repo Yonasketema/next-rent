@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema, bookUpdateSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
+import { subject } from "@casl/ability";
 
 export async function GET(
   req: Request,
@@ -48,14 +49,29 @@ export async function PUT(
   try {
     const parsed = bookUpdateSchema.safeParse(await req.json());
 
-    //FIXME:   !owner Id from req
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("update", "Book")) {
+    const book = await prisma.book.findFirst({
+      where: {
+        id: params.id,
+      },
+    });
+
+    if (!book) {
       return NextResponse.json({
         data: {
           error: true,
-          message: "Unauthenticated",
+          message: "book not found !",
+          status: 404,
+        },
+      });
+    }
+
+    if (!authUser || !ability(authUser).can("update", subject("Book", book))) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
           status: 401,
         },
       });
@@ -100,12 +116,27 @@ export async function DELETE(
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
+    const book = await prisma.book.findFirst({
+      where: {
+        id: params.id,
+      },
+    });
 
-    if (!authUser || !ability(authUser).can("delete", "Book")) {
+    if (!book) {
       return NextResponse.json({
         data: {
           error: true,
-          message: "Unauthenticated",
+          message: "book not found !",
+          status: 404,
+        },
+      });
+    }
+
+    if (!authUser || !ability(authUser).can("update", subject("Book", book))) {
+      return NextResponse.json({
+        data: {
+          error: true,
+          message: "unauthorized",
           status: 401,
         },
       });
@@ -118,7 +149,7 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({});
+    return NextResponse.json({ data: { error: false } });
   } catch (error) {
     return NextResponse.json({
       data: {
