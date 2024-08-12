@@ -21,6 +21,9 @@ export async function GET(req: Request) {
         category: true,
         owner: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json({

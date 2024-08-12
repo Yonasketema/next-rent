@@ -104,7 +104,7 @@ export async function PUT(
     return NextResponse.json({
       data: {
         error: true,
-        message: "An error occurred while update books.",
+        message: error.message,
         status: 500,
       },
     });

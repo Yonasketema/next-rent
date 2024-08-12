@@ -17,9 +17,7 @@ import {
   Avatar,
   Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
 import DeleteButton from "./DeleteButton";
@@ -77,7 +75,7 @@ export default function BookTable({ books }: TableProps) {
         ),
       },
     ],
-    []
+    [],
   );
 
   const table = useMaterialReactTable({

@@ -23,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SvgIcon from "./SvgIcon";
 import DeleteButton from "./DeleteButton";
 import { createURL } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 type TableProps = {
   books: Book[];
@@ -30,6 +31,7 @@ type TableProps = {
 
 export default function DashBoardTable({ books }: TableProps) {
   const [isEditingBook, setIsEditingBook] = useState(false);
+  const router = useRouter();
 
   const handleSaveBook: MRT_TableOptions<Book>["onEditingRowSave"] = async ({
     values,
@@ -47,6 +49,7 @@ export default function DashBoardTable({ books }: TableProps) {
         price: values.Price,
       }),
     });
+    router.refresh();
 
     setIsEditingBook(false);
     table.setEditingRow(null); //exit editing mode
