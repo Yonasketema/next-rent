@@ -4,6 +4,10 @@ export const ability = (user: any) =>
   defineAbility((can) => {
     can("read", "Book");
     can("create", "Rent");
+    can(
+      "request-approval",
+      "User",
+    )
 
     if (user.role === "OWNER") {
       can("read:stats", "Book");

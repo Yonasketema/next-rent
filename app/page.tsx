@@ -1,7 +1,4 @@
-"use client";
-
 import { Container, Typography, Box, Button } from "@mui/material";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -64,7 +61,22 @@ export default function Home() {
                   fontWeight: "bold",
                 }}
               >
-                Get Started
+                LogIn
+              </Button>
+            </Link>
+            <Link href="/share-book">
+              <Button
+                variant="contained"
+                sx={{
+                  background: "linear-gradient(45deg, #FFC947, #FF3CAC)",
+                  color: "#0A0A23",
+                  padding: "10px 20px",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                  marginLeft: 4,
+                }}
+              >
+                Share Book
               </Button>
             </Link>
           </Box>
