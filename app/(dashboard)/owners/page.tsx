@@ -23,7 +23,7 @@ const Owners = async () => {
 
   return (
     <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
-      <OwnerTable owners={data} />
+      <OwnerTable owners={data} title=" List of Owner" />
     </Box>
   );
 };

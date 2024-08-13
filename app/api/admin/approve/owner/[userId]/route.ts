@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: { userId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
@@ -27,6 +27,12 @@ export async function PATCH(
       data: {
         approved: approved,
         role: "OWNER",
+      },
+    });
+
+    await prisma.approvalRequest.deleteMany({
+      where: {
+        userId: params.userId,
       },
     });
 

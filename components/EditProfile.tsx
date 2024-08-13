@@ -11,44 +11,67 @@ import {
   Box,
   Paper,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { User } from "@prisma/client";
 import { createURL } from "@/lib/api";
+import { usePathname, useRouter } from "next/navigation";
 
 type ProfileProps = {
   user: User;
   children: React.ReactNode;
 };
 
-export default function ProfileEditor({ user ,children}: ProfileProps) {
+export default function ProfileEditor({ user, children }: ProfileProps) {
   const [userData, setUserData] = useState({
     name: user.name || "",
-    email:user.email || "",
+    email: user.email || "",
     location: user.location || "",
-    phone: user.phone ||  "",
-   
+    phone: user.phone || "",
+
     image: user.image || "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const pathName = usePathname();
+  const router = useRouter();
+
   const handleRequestApproval = async () => {
-    await fetch(createURL(`/api/user/${user.id}/request-approval`), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    try {
+      setIsLoading(true);
+      await fetch(createURL(`/api/user/${user.id}/request-approval`), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      setIsLoading(false);
+
+      router.refresh();
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   const handleEditProfile = async () => {
-    await fetch(createURL(`/api/user/${user.id}`), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    try {
+      setIsLoading(true);
+
+      await fetch(createURL(`/api/user/${user.id}`), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      router.refresh();
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -69,22 +92,20 @@ export default function ProfileEditor({ user ,children}: ProfileProps) {
     }
   };
 
-  const  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-     if(!user.approved){
-      await   handleRequestApproval()
-     }else{
-       await handleEditProfile()
-
-     }
+    if (pathName === "/share-book") {
+      await handleRequestApproval();
+    } else {
+      await handleEditProfile();
+    }
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 2 }}>
-        
-           {children}
-        
+        {children}
+
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Box display="flex" flexDirection="column" alignItems="center">
@@ -156,16 +177,7 @@ export default function ProfileEditor({ user ,children}: ProfileProps) {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  {user.approved ? (
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                    >
-                      Save Changes
-                    </Button>
-                  ) : (
+                  {pathName === "/share-book" ? (
                     <Button
                       type="submit"
                       fullWidth
@@ -177,7 +189,24 @@ export default function ProfileEditor({ user ,children}: ProfileProps) {
                         backgroundColor: "#0A0A23",
                       }}
                     >
-                      Request Approval
+                      {isLoading ? (
+                        <CircularProgress size={21} />
+                      ) : (
+                        "Request Approval"
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                    >
+                      {isLoading ? (
+                        <CircularProgress size={21} />
+                      ) : (
+                        " Save Changes "
+                      )}
                     </Button>
                   )}
                 </Grid>

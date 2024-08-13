@@ -17,19 +17,17 @@ import {
   Avatar,
   Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
 import DeleteButton from "./DeleteButton";
 
- 
 type TableProps = {
   owners: User[];
+  title: string;
 };
 
-export default function OwnerTable({ owners }: TableProps) {
+export default function OwnerTable({ owners, title }: TableProps) {
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
       {
@@ -47,7 +45,7 @@ export default function OwnerTable({ owners }: TableProps) {
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Avatar alt="user avatar image" src="/static/images/avatar/1.jpg" />
-            {row.name || "unknown"}
+            {row.original.name || "unknown"}
           </Box>
         ),
       },
@@ -68,7 +66,10 @@ export default function OwnerTable({ owners }: TableProps) {
         maxSize: 100,
 
         Cell: ({ row }) => (
-          <ToggleSwitch ownerId={row.id} status={row.original.status} />
+          <ToggleSwitch
+            ownerId={row.original.id}
+            status={row.original.status}
+          />
         ),
       },
     ],
@@ -91,9 +92,11 @@ export default function OwnerTable({ owners }: TableProps) {
     editDisplayMode: "modal",
     enableEditing: true,
     getRowId: (row) => row.id,
-    renderTopToolbarCustomActions:()=>   <Typography  color="#222" fontSize={16}  fontWeight="700">
-    List of Owner 
-  </Typography>,
+    renderTopToolbarCustomActions: () => (
+      <Typography color="#222" fontSize={16} fontWeight="700">
+        {title}
+      </Typography>
+    ),
     renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
       <>
         <DialogTitle variant="h3">Edit User</DialogTitle>
@@ -112,8 +115,12 @@ export default function OwnerTable({ owners }: TableProps) {
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
-        <DeleteButton type="USER" userId={row.original.id}  sx={{ marginRight: 3 }} />
-        
+        <DeleteButton
+          type="USER"
+          userId={row.original.id}
+          sx={{ marginRight: 3 }}
+        />
+
         <ApproveButton
           type="USER"
           isApproved={row?.original.approved}
@@ -139,5 +146,3 @@ export default function OwnerTable({ owners }: TableProps) {
 
   return <MaterialReactTable table={table} />;
 }
-
- 

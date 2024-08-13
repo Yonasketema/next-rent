@@ -14,10 +14,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Button } from "@mui/material";
 import NavLink from "./NavLink";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Header from "./Header";
 import SvgIcon from "./SvgIcon";
+import { createURL } from "@/lib/api";
 
 const drawerWidth = 240;
 
@@ -126,7 +127,7 @@ const links_bottoms = [
   },
 ];
 
-export default function Sidebar({ children, user }) {
+export default function Sidebar({ children, user, userIds }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -262,6 +263,25 @@ export default function Sidebar({ children, user }) {
                         justifyContent: "center",
                       }}
                     >
+                      {text.link === "notification" && userIds && (
+                        <div
+                          style={{
+                            backgroundColor: "red",
+                            width: 21,
+                            height: 21,
+                            borderRadius: 100,
+                            position: "absolute",
+                            color: "white",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            top: -1,
+                            right: 11,
+                          }}
+                        >
+                          <p>{userIds?.length}</p>
+                        </div>
+                      )}
                       <SvgIcon
                         src={`/icons/${text.icon}.svg`}
                         width={20}
