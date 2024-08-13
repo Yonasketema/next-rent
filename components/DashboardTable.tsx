@@ -75,7 +75,7 @@ export default function DashBoardTable({ books }: TableProps) {
         accessorFn: (row, i) => (i < 10 ? `0${++i}` : ++i),
         accessorKey: "no",
         header: "No.",
-        maxSize: 50,
+        maxSize: 20,
         enableEditing: false,
       },
       {
@@ -199,8 +199,7 @@ export default function DashBoardTable({ books }: TableProps) {
     ),
     muiTableContainerProps: {
       sx: {
-        minHeight: "200px",
-        width: "100%",
+        maxHeight: '333px',
       },
     },
     muiTablePaperProps: {

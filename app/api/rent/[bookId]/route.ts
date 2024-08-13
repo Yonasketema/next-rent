@@ -20,7 +20,7 @@ export async function POST(
     }
 
     const book = await prisma.book.findUnique({
-      where: { id: params.bookId },
+      where: { id: params.bookId ,approved:true},
     });
 
     if (!book || book.status !== "AVAILABLE") {

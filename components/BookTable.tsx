@@ -32,7 +32,7 @@ export default function BookTable({ books }: TableProps) {
       {
         accessorFn: (row, i) => (i < 10 ? `0${++i}` : ++i),
         header: "No.",
-        maxSize: 50,
+        maxSize: 10,
       },
       {
         accessorFn: (row) => row.author,

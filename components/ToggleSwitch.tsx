@@ -37,7 +37,7 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
       bgcolor={checked ? "rgba(0,128,0,0.1)" : "rgba(128,128,128,0.1)"}
       width="fit-content"
       sx={{
-        width: 200,
+        width: '100%',
       }}
     >
       <CheckIcon style={{ color: checked ? "green" : "gray" }} />
@@ -55,7 +55,7 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
         checked={checked}
         onChange={handleChange}
         color="success"
-        inputProps={{ "aria-label": "controlled", width: 200 }}
+        inputProps={{ "aria-label": "controlled", width: '100%' }}
       />
     </Box>
   );
