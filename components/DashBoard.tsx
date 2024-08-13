@@ -139,8 +139,6 @@ function DashBoard({ tableData }: DashboardProps) {
             borderRadius: 3,
           }}
         >
-          
-      
           <DashBoardTable books={tableData} />
         </Box>
         <Box

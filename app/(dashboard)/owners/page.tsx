@@ -1,7 +1,5 @@
 import React from "react";
-import {
-  Box,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import OwnerTable from "@/components/OwnerTable";
 import { redirect } from "next/navigation";
 import { getCurrentSignInUserServer } from "@/lib/authUser";
@@ -9,13 +7,13 @@ import { headers } from "next/headers";
 import { createURL } from "@/lib/api";
 
 const Owners = async () => {
-
   const user = await getCurrentSignInUserServer();
-  
-  if (user?.user?.role !== "ADMIN") return redirect("/login?callbackUrl=/dashboard");
-  
+
+  if (user?.user?.role !== "ADMIN")
+    return redirect("/login?callbackUrl=/owners");
+
   let owners = await fetch(createURL("/api/admin/owners"), {
-    headers:new Headers(headers()),
+    headers: new Headers(headers()),
     cache: "no-store",
   });
 
@@ -25,7 +23,6 @@ const Owners = async () => {
 
   return (
     <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
-  
       <OwnerTable owners={data} />
     </Box>
   );

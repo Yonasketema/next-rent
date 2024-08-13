@@ -17,6 +17,7 @@ import Image from "next/image";
 import { signup } from "@/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signupSchema } from "@/lib/zodSchemas";
 
 export default function Signup() {
   const [formValues, setFormValues] = useState({
@@ -28,6 +29,7 @@ export default function Signup() {
   });
   const [checked, setChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState("");
 
   const handleCheckChange = (event) => {
     setChecked(event.target.checked);
@@ -35,6 +37,7 @@ export default function Signup() {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    setErrors("");
     setFormValues({ ...formValues, [id]: value });
   };
 
@@ -45,11 +48,12 @@ export default function Signup() {
 
     try {
       setIsLoading(true);
+      const inputs = signupSchema.parse(formValues);
       const newUser = await signup(
-        formValues.phone,
-        formValues.email,
-        formValues.password,
-        formValues.location,
+        inputs.phone,
+        inputs.email,
+        inputs.password,
+        inputs.location,
       );
       setIsLoading(false);
 
@@ -58,6 +62,7 @@ export default function Signup() {
       }
     } catch (error) {
       setIsLoading(false);
+      setErrors(error.formErrors.fieldErrors);
     }
   }
 
@@ -125,6 +130,8 @@ export default function Signup() {
               value={formValues.email}
               onChange={handleChange}
             />
+            {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+
             <TextField
               fullWidth
               size="small"
@@ -134,6 +141,10 @@ export default function Signup() {
               value={formValues.password}
               onChange={handleChange}
             />
+            {errors.password && (
+              <p style={{ color: "red" }}>{errors.password}</p>
+            )}
+
             <TextField
               fullWidth
               size="small"
@@ -143,6 +154,10 @@ export default function Signup() {
               value={formValues.confirmPassword}
               onChange={handleChange}
             />
+            {errors.confirmPassword && (
+              <p style={{ color: "red" }}>{errors.confirmPassword}</p>
+            )}
+
             <TextField
               fullWidth
               size="small"
@@ -152,6 +167,10 @@ export default function Signup() {
               value={formValues.location}
               onChange={handleChange}
             />
+            {errors.location && (
+              <p style={{ color: "red" }}>{errors.location}</p>
+            )}
+
             <TextField
               fullWidth
               size="small"
@@ -161,6 +180,8 @@ export default function Signup() {
               value={formValues.phone}
               onChange={handleChange}
             />
+            {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+
             <FormControlLabel
               control={
                 <Checkbox

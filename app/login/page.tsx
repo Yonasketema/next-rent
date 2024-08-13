@@ -14,6 +14,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { loginSchema } from "@/lib/zodSchemas";
 
 export default function Login() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function Login() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -31,20 +33,28 @@ export default function Login() {
   async function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
     setIsLoading(true);
-    const signResponse = await signIn("credentials", {
-      email: formValues.email,
-      password: formValues.password,
-      redirect: false,
-    });
-    setIsLoading(false);
 
-    if (signResponse && signResponse.ok) {
-      router.push("/dashboard");
-    } else {
-      console.log("sign error", signResponse?.error);
+    try {
+      const inputs = loginSchema.parse(formValues);
+      const signResponse = await signIn("credentials", {
+        email: inputs.email,
+        password: inputs.password,
+        redirect: false,
+      });
+
+      if (signResponse && signResponse.ok) {
+        router.push("/dashboard");
+        setIsLoading(false);
+      } else {
+        console.log("sign error", signResponse?.error);
+        setIsLoading(false);
+
+        // TODO:toast
+      }
+    } catch (error) {
       setIsLoading(false);
 
-      // TODO:toast
+      setError("incorret email or password");
     }
   }
 
@@ -111,6 +121,7 @@ export default function Login() {
               onChange={handleChange}
               fullWidth
             />
+
             <TextField
               size="small"
               label="Password"
@@ -120,6 +131,8 @@ export default function Login() {
               onChange={handleChange}
               fullWidth
             />
+            {error && <p style={{ color: "red" }}>{error}</p>}
+
             <Button
               variant="contained"
               color="primary"

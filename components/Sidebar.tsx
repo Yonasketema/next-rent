@@ -53,7 +53,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
   ...theme.mixins.toolbar,
 }));
- 
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -127,10 +126,9 @@ const links_bottoms = [
   },
 ];
 
-export default function Sidebar ({ children ,user }) {
+export default function Sidebar({ children, user }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  
 
   const pathName = usePathname();
 
@@ -148,155 +146,158 @@ export default function Sidebar ({ children ,user }) {
             backgroundColor: "#171B36",
             borderRadius: 3,
             color: "white",
-            display:'flex',
-            flexDirection:"column",
-            justifyContent:'space-between',
-            height:"100%",
-            
-             
-             
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+
             ...(open && { px: 2 }),
           },
         }}
-        
       >
-       <div>
-       <DrawerHeader
-          sx={{
-            ...(!open && { justifyContent: "center" }),
-          }}
-        >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawer}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box
+        <div>
+          <DrawerHeader
             sx={{
-              display: "flex",
-              gap: 2,
-              alignItems: "center",
-              ...(!open && { display: "none" }),
-              color: "#00ABFF",
+              ...(!open && { justifyContent: "center" }),
             }}
           >
-           
-            <SvgIcon    src={`/book-logo-xs.svg`} width={40} height={29} />
-            <Typography>Book Rent</Typography>
-          </Box>
-        </DrawerHeader>
-        <Divider color="gray" />
-        <List>
-          {links.map((text, index) => {
-            if (text.role.includes(user?.user.role)) {
-              return (
-                <ListItem
-                  key={text.link}
-                  disablePadding
-                  sx={{ display: "block" }}
-                >
-                  <NavLink href={`/${text.link}`}>
-                    <ListItemButton
-                      sx={{
-                        justifyContent: open ? "initial" : "center",
-                        px: 2.5,
-                        color: "white",
-                        backgroundColor: "inherit",
-                        borderRadius: 1.5,
-                        ":hover": {
-                          backgroundColor: "#00ABFF40",
-                        },
-                        my: 0.5,
-                        height:36
-                        
-                      }}
-                    >
-                      <ListItemIcon
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawer}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                alignItems: "center",
+                ...(!open && { display: "none" }),
+                color: "#00ABFF",
+              }}
+            >
+              <SvgIcon src={`/book-logo-xs.svg`} width={40} height={29} />
+              <Typography>Book Rent</Typography>
+            </Box>
+          </DrawerHeader>
+          <Divider color="gray" />
+          <List>
+            {links.map((text, index) => {
+              if (text.role.includes(user?.user.role)) {
+                return (
+                  <ListItem
+                    key={text.link}
+                    disablePadding
+                    sx={{ display: "block" }}
+                  >
+                    <NavLink href={`/${text.link}`}>
+                      <ListItemButton
                         sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : "auto",
-                          justifyContent: "center",
+                          justifyContent: open ? "initial" : "center",
+                          px: 2.5,
+                          color: "white",
+                          backgroundColor: "inherit",
+                          borderRadius: 1.5,
+                          ":hover": {
+                            backgroundColor: "#00ABFF40",
+                          },
+                          my: 0.5,
+                          height: 36,
                         }}
                       >
-                         
-                        <SvgIcon src={`/icons/${text.icon}.svg`} width={20} height={29} />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={text.label}
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                    </ListItemButton>
-                  </NavLink>
-                </ListItem>
-              );
-            }
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 0,
+                            mr: open ? 3 : "auto",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <SvgIcon
+                            src={`/icons/${text.icon}.svg`}
+                            width={20}
+                            height={29}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={text.label}
+                          sx={{ opacity: open ? 1 : 0 }}
+                        />
+                      </ListItemButton>
+                    </NavLink>
+                  </ListItem>
+                );
+              }
 
-            return null;
-          })}
-        </List>
-        <Divider color="gray" />
-        <List>
-          {links_bottoms.map((text, index) => (
-            <ListItem key={text.link} disablePadding sx={{ display: "block" }}>
-              <NavLink href={`/${text.link}`}>
-                <ListItemButton
-                  sx={{
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    color: "white",
-                    backgroundColor: "inherit",
-                    borderRadius: 1.5,
-                    ":hover": {
-                      backgroundColor: "#00ABFF40",
-                    },
-                    my: 1,
-                    height:36
-                  }}
-                >
-                  <ListItemIcon
+              return null;
+            })}
+          </List>
+          <Divider color="gray" />
+          <List>
+            {links_bottoms.map((text, index) => (
+              <ListItem
+                key={text.link}
+                disablePadding
+                sx={{ display: "block" }}
+              >
+                <NavLink href={`/${text.link}`}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                      color: "white",
+                      backgroundColor: "inherit",
+                      borderRadius: 1.5,
+                      ":hover": {
+                        backgroundColor: "#00ABFF40",
+                      },
+                      my: 1,
+                      height: 36,
                     }}
                   >
-                    
-                    <SvgIcon src={`/icons/${text.icon}.svg`} width={20} height={20} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={text.label}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </NavLink>
-            </ListItem>
-          ))}
-        </List>
-       </div>
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <SvgIcon
+                        src={`/icons/${text.icon}.svg`}
+                        width={20}
+                        height={20}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text.label}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </NavLink>
+              </ListItem>
+            ))}
+          </List>
+        </div>
         <Button
           sx={{
             background: "#FFFFFF33",
             textTransform: "none",
             color: "white",
-            marginBottom:"30%",
-            display:"flex",
-            gap:1.2,
- 
+            marginBottom: "30%",
+            display: "flex",
+            gap: 1.2,
+
             ...(!open && { display: "none" }),
           }}
           onClick={() => signOut()}
         >
-          
-         
-          <SvgIcon  src={`/icons/Logout.svg`}  />
+          <SvgIcon src={`/icons/Logout.svg`} />
           Logout
         </Button>
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, color: "gray", width: "100%", px: 3 }}
+        sx={{ flexGrow: 1, color: "gray", width: "10%", px: open ? 1.2 : 3 }}
       >
         <Box
           sx={{
@@ -309,7 +310,7 @@ export default function Sidebar ({ children ,user }) {
             backgroundColor: "white",
           }}
         >
-          <Header role={user.user.role}/>
+          <Header role={user.user.role} />
         </Box>
 
         {children}

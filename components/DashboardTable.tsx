@@ -169,7 +169,11 @@ export default function DashBoardTable({ books }: TableProps) {
       <>
         <DialogTitle variant="h6">Edit Book</DialogTitle>
         <DialogContent
-          sx={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+          }}
         >
           {internalEditComponents}
         </DialogContent>
@@ -179,7 +183,7 @@ export default function DashBoardTable({ books }: TableProps) {
       </>
     ),
     renderRowActions: ({ row, table }) => (
-      <Box sx={{ display: "flex", gap: "1rem" }}>
+      <Box sx={{ display: "flex", gap: 1, px: 1 }}>
         <Tooltip title="Edit">
           <IconButton onClick={() => table.setEditingRow(row)}>
             <EditIcon />
@@ -199,7 +203,7 @@ export default function DashBoardTable({ books }: TableProps) {
     ),
     muiTableContainerProps: {
       sx: {
-        maxHeight: '333px',
+        maxHeight: "333px",
       },
     },
     muiTablePaperProps: {

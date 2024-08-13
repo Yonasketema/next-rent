@@ -4,6 +4,7 @@ import { Switch, Typography, Box } from "@mui/material";
 
 import CheckIcon from "@mui/icons-material/Check";
 import { createURL } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 type ToggleSwitchProps = {
   status: "ACTIVE" | "DISABLED";
@@ -12,8 +13,7 @@ type ToggleSwitchProps = {
 
 const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
   const [checked, setChecked] = useState(status === "ACTIVE");
-
- 
+  const router = useRouter();
 
   const handleChange = async (event) => {
     setChecked(event.target.checked);
@@ -26,6 +26,7 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
         status: !checked ? "ACTIVE" : "DISABLED",
       }),
     });
+    router.refresh();
   };
 
   return (
@@ -36,9 +37,6 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
       borderRadius="16px"
       bgcolor={checked ? "rgba(0,128,0,0.1)" : "rgba(128,128,128,0.1)"}
       width="fit-content"
-      sx={{
-        width: '100%',
-      }}
     >
       <CheckIcon style={{ color: checked ? "green" : "gray" }} />
       <Typography
@@ -55,7 +53,7 @@ const ToggleSwitch = ({ status, ownerId }: ToggleSwitchProps) => {
         checked={checked}
         onChange={handleChange}
         color="success"
-        inputProps={{ "aria-label": "controlled", width: '100%' }}
+        inputProps={{ "aria-label": "controlled" }}
       />
     </Box>
   );

@@ -1,23 +1,34 @@
-'use client'
-import React, { useState } from 'react';
-import { Grid, TextField, Button, Modal, Typography, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { Category } from '@prisma/client';
-import Image from 'next/image';
-import { createURL } from '@/lib/api';
+"use client";
+import React, { useState } from "react";
+import {
+  Grid,
+  TextField,
+  Button,
+  Modal,
+  Typography,
+  Box,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import { Category } from "@prisma/client";
+import Image from "next/image";
+import { createURL } from "@/lib/api";
+import { bookSchema } from "@/lib/zodSchemas";
 
+type BookUploadProps = {
+  categories: Category[];
+};
 
-type BookUploadProps ={
-    categories:Category[]
-}
-
-const BookUploadPage = ({categories}:BookUploadProps) => {
+const BookUploadPage = ({ categories }: BookUploadProps) => {
   const [bookDetails, setBookDetails] = useState({
-    title: '',
-    author: '',
-    categoryId: '',
-    price: '',
-    quantity: '',
-    cover:null
+    title: "",
+    author: "",
+    categoryId: "",
+    price: "",
+    quantity: "",
+    cover: null,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,73 +40,74 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
     });
   };
 
-    const handleUpload = async () => {
+  const handleUpload = async () => {
+    const newBook = bookSchema.parse({
+      ...bookDetails,
+      price: Number(bookDetails.price),
+      quantity: Number(bookDetails.quantity),
+    });
 
     await fetch(createURL(`/api/books`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({...bookDetails,price:Number(bookDetails.price),quantity:Number(bookDetails.quantity)}),
+      body: JSON.stringify(newBook),
     });
-    setIsModalOpen(true)
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
- 
-   const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setBookDetails({ ...bookDetails , [name]: Number(value) || value });
+    setBookDetails({ ...bookDetails, [name]: Number(value) || value });
   };
 
   const handleFileChange = (e) => {
     setBookDetails({ ...bookDetails, cover: e.target.files[0] });
   };
 
-
-
   return (
-    <Grid container spacing={2}    >
-     
+    <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
-      <Box
-              component="label"
-              sx={{
-                my:4,
-                display: 'flex',
-                justifyContent:"center",
-                alignItems:"center",
-                width: '100%',
-                height: '350px',
-                border: '2px dashed #ccc',
-                borderRadius: '8px',
-                textAlign: 'center',
-                lineHeight: '400px',
-                backgroundSize:'contain',
-                backgroundPosition: 'center',
-                backgroundRepeat: "no-repeat",
-                backgroundImage: bookDetails.cover ? `url(${URL.createObjectURL(bookDetails.cover)})` : 'none',
-              }}
-            >
-              {!bookDetails.cover && (
-                <Typography variant="h6" color="textSecondary">
-                  Click to upload book cover
-                </Typography>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
-            </Box>
-          
+        <Box
+          component="label"
+          sx={{
+            my: 4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "350px",
+            border: "2px dashed #ccc",
+            borderRadius: "8px",
+            textAlign: "center",
+            lineHeight: "400px",
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: bookDetails.cover
+              ? `url(${URL.createObjectURL(bookDetails.cover)})`
+              : "none",
+          }}
+        >
+          {!bookDetails.cover && (
+            <Typography variant="h6" color="textSecondary">
+              Click to upload book cover
+            </Typography>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+        </Box>
       </Grid>
 
-     
       <Grid item xs={12} sm={6}>
         <form>
           <TextField
@@ -114,12 +126,12 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
             fullWidth
             margin="normal"
           />
-      
-            <FormControl fullWidth margin="normal">
+
+          <FormControl fullWidth margin="normal">
             <InputLabel>Category</InputLabel>
-           
+
             <Select
-            label="Category"
+              label="Category"
               name="categoryId"
               value={bookDetails.categoryId}
               onChange={handleChange}
@@ -131,7 +143,7 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
                 </MenuItem>
               ))}
             </Select>
-            </FormControl>
+          </FormControl>
           <TextField
             label="Price"
             name="price"
@@ -156,35 +168,32 @@ const BookUploadPage = ({categories}:BookUploadProps) => {
         </form>
       </Grid>
 
-       
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 700,
-            bgcolor: 'background.paper',
-            
-            borderRadius:3,
+            bgcolor: "background.paper",
+
+            borderRadius: 3,
             p: 4,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
-             <Image
-              src="/static/smile.svg"
-              alt="smile"
-              width={200}
-              height={180}
-            />
-          <Typography variant="h6">
-          Congrats!
+          <Image src="/static/smile.svg" alt="smile" width={200} height={180} />
+          <Typography variant="h6">Congrats!</Typography>
+          <Typography variant="body1" sx={{ color: "#777" }}>
+            Your have uploaded the book successfully. Waite until we approved
+            it.
           </Typography>
-          <Typography variant="body1" sx={{color:"#777"}}>
-          Your have uploaded the book successfully. Waite until we approved it.
-          </Typography>
-          <Button variant="contained" onClick={handleCloseModal} sx={{ mt: 2,backgroundColor:"#00ABFF" }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseModal}
+            sx={{ mt: 2, backgroundColor: "#00ABFF" }}
+          >
             OK
           </Button>
         </Box>
