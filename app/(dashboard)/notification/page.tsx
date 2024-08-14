@@ -11,7 +11,11 @@ const Notification = async () => {
   const user = await getCurrentSignInUserServer();
 
   if (user?.user?.role !== "ADMIN")
-    return redirect("/login?callbackUrl=/owners");
+    return (
+      <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
+        Notification
+      </Box>
+    );
 
   await prisma.approvalRequest.updateMany({
     where: {
