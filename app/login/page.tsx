@@ -48,7 +48,8 @@ export default function Login() {
       } else {
         console.log("sign error", signResponse?.error);
         setIsLoading(false);
-
+        setError("incorret email or password");
+       
         // TODO:toast
       }
     } catch (error) {
