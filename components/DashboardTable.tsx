@@ -199,6 +199,7 @@ export default function DashBoardTable({ books }: TableProps) {
       isSaving: isEditingBook,
       globalFilter,
       showProgressBars: isRefetching,
+      columnFilters,
     },
     columns,
     manualFiltering: true,
