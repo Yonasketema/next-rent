@@ -2,10 +2,43 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
+import { BookStatus } from "@prisma/client";
+
+interface QueryParams {
+  title?: any;
+  price?: any;
+
+  status?: BookStatus;
+}
 
 export async function GET(req: Request) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
+
+    const { searchParams } = new URL(req.url);
+
+    const title = searchParams.get("title");
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
+    const status = searchParams.get("status") as BookStatus;
+
+    const filters: QueryParams = {};
+
+    if (title) {
+      filters.title = { contains: title, mode: "insensitive" };
+    }
+    if (minPrice || maxPrice) {
+      filters.price = {};
+      if (Number(minPrice)) {
+        filters.price.gte = Number(minPrice);
+      }
+      if (Number(maxPrice)) {
+        filters.price.lte = Number(maxPrice);
+      }
+    }
+    if (status) {
+      filters.status = status;
+    }
 
     if (!authUser || !ability(authUser).can("read", "Book")) {
       return NextResponse.json({
@@ -17,6 +50,7 @@ export async function GET(req: Request) {
       });
     }
     const books = await prisma.book.findMany({
+      where: filters,
       include: {
         category: true,
         owner: true,
@@ -36,7 +70,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       data: {
         error: true,
-        message: "An error occurred while fetching books.",
+        message: error.message,
         status: 500,
       },
     });

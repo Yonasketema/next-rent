@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
   MRT_EditActionButtons,
   useMaterialReactTable,
   type MRT_ColumnDef,
   MRT_TableOptions,
+  MRT_ColumnFiltersState,
 } from "material-react-table";
 import { Book } from "@prisma/client";
 import {
@@ -31,7 +32,58 @@ type TableProps = {
 
 export default function DashBoardTable({ books }: TableProps) {
   const [isEditingBook, setIsEditingBook] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
   const router = useRouter();
+
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
+    [],
+  );
+  const [data, setData] = useState(books);
+
+  const queryParams = new URLSearchParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      columnFilters.forEach((item) => {
+        if (item.id === "bookName") {
+          queryParams.append("title", item.value);
+        } else if (item.id === "Price") {
+          const [minPrice, maxPrice] = item.value;
+          queryParams.append("minPrice", minPrice);
+          queryParams.append("maxPrice", maxPrice);
+        } else if (item.id === "bookNo") {
+          queryParams.append("bookNo", item.value);
+        } else if (item.id === "bookName") {
+          queryParams.append("title", item.value);
+        } else if (item.id === "Status") {
+          queryParams.append("status", item.value);
+        }
+      });
+
+      if (!globalFilter && !columnFilters) {
+        setData(books);
+      }
+
+      if (globalFilter?.length >= 3) {
+        queryParams.append("title", globalFilter);
+      }
+
+      console.log(`/api/books?${queryParams.toString()}`);
+
+      try {
+        setIsRefetching(true);
+        const filteredData = await fetch(
+          createURL(`/api/books?${queryParams.toString()}`),
+        );
+        const res = await filteredData.json();
+
+        setData(res?.data?.books);
+        setIsRefetching(false);
+      } catch (error) {}
+    };
+    fetchData();
+  }, [globalFilter, JSON.stringify(columnFilters)]);
 
   const handleSaveBook: MRT_TableOptions<Book>["onEditingRowSave"] = async ({
     values,
@@ -77,6 +129,7 @@ export default function DashBoardTable({ books }: TableProps) {
         header: "No.",
         maxSize: 20,
         enableEditing: false,
+        enableColumnFilter: false,
       },
       {
         accessorFn: (row, i) => row.id,
@@ -108,8 +161,11 @@ export default function DashBoardTable({ books }: TableProps) {
         accessorFn: (row) => row.status,
         header: "Status",
         maxSize: 100,
+
         editVariant: "select",
         editSelectOptions: ["AVAILABLE", "RENTED", "UNAVAILABLE"],
+        filterSelectOptions: ["AVAILABLE", "RENTED", "UNAVAILABLE"],
+        filterVariant: "select",
 
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
@@ -129,6 +185,9 @@ export default function DashBoardTable({ books }: TableProps) {
         header: "Price",
         maxSize: 100,
         Cell: ({ row }) => <p>{row.original.price} Birr</p>,
+        filterVariant: "range",
+        filterFn: "between",
+        size: 80,
       },
     ],
     [],
@@ -138,9 +197,16 @@ export default function DashBoardTable({ books }: TableProps) {
     state: {
       // isLoading: true,
       isSaving: isEditingBook,
+      globalFilter,
+      showProgressBars: isRefetching,
     },
     columns,
+    manualFiltering: true,
+    onGlobalFilterChange: setGlobalFilter,
+    // enableGlobalFilter: false,
+
     enableRowActions: true,
+    onColumnFiltersChange: setColumnFilters,
     enableColumnActions: false,
     enablePagination: false,
     enableBottomToolbar: false,
@@ -159,7 +225,7 @@ export default function DashBoardTable({ books }: TableProps) {
         "categoryId",
       ],
     },
-    data: books,
+    data,
     onEditingRowSave: handleSaveBook,
     createDisplayMode: "modal",
     editDisplayMode: "modal",
@@ -203,7 +269,7 @@ export default function DashBoardTable({ books }: TableProps) {
     ),
     muiTableContainerProps: {
       sx: {
-        maxHeight: "333px",
+        height: "333px",
       },
     },
     muiTablePaperProps: {
