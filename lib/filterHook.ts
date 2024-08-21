@@ -54,7 +54,10 @@ export const useFilterData = (initData, baseURL, categories?: any) => {
       try {
         setIsRefetching(true);
         const filteredData = await fetch(
-          createURL(`${baseURL}?${queryParams.toString()}`)
+          createURL(`${baseURL}?${queryParams.toString()}`),
+          {
+            next: { tags: ["data"] },
+          }
         );
         const res = await filteredData.json();
 

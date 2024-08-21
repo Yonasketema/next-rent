@@ -131,7 +131,7 @@ export default function OwnerTable({ owners, title }: TableProps) {
       </>
     ),
     renderRowActions: ({ row, table }) => (
-      <Box>
+      <Box sx={{ display: "flex" }}>
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>

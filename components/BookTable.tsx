@@ -145,7 +145,7 @@ export default function BookTable({ books, categories }: TableProps) {
       </Typography>
     ),
     renderRowActions: ({ row, table }) => (
-      <Box>
+      <Box sx={{ display: "flex" }}>
         <IconButton aria-label="view">
           <VisibilityIcon sx={{ color: "black" }} />
         </IconButton>
