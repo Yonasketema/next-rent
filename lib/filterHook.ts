@@ -60,7 +60,9 @@ export const useFilterData = (initData, baseURL, categories?: any) => {
 
         setData(res?.data?.books || res?.data?.owners);
         setIsRefetching(false);
-      } catch (error) {}
+      } catch (error) {
+        setIsRefetching(false);
+      }
     };
     fetchData();
   }, [globalFilter, JSON.stringify(columnFilters)]);
