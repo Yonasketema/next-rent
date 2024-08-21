@@ -7,20 +7,19 @@ import { createURL } from "@/lib/api";
 async function OwnerDashboard() {
   const user = await getCurrentSignInUserServer();
 
-  let book = await fetch(
-    createURL(`/api/user/${user.user.userId}/books`),
-    {
-      headers:new Headers(headers())
-    }
-  );
+  let book = await fetch(createURL(`/api/user/${user.user.userId}/books`), {
+    headers: new Headers(headers()),
+  });
 
   book = await book.json();
 
- 
-
   return (
     <>
-      <DashBoard tableData={book?.data?.books} />
+      <DashBoard
+        tableData={book?.data?.books}
+        role="OWNER"
+        userId={user.user.userId}
+      />
     </>
   );
 }

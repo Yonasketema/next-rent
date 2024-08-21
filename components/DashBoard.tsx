@@ -4,14 +4,16 @@ import SouthIcon from "@mui/icons-material/South";
 import { Box, Divider, Typography } from "@mui/material";
 
 import AppPieChart from "@/components/PieChart";
-import { Book } from "@prisma/client";
+import { Book, Role } from "@prisma/client";
 import DashBoardTable from "@/components/DashboardTable";
 
 type DashboardProps = {
   tableData: Book[];
+  role: Role;
+  userId?: string;
 };
 
-function DashBoard({ tableData }: DashboardProps) {
+function DashBoard({ tableData, role, userId }: DashboardProps) {
   return (
     <Box sx={{ display: "flex", gap: 3, marginTop: 3, width: "100%" }}>
       <Box
@@ -139,7 +141,7 @@ function DashBoard({ tableData }: DashboardProps) {
             borderRadius: 3,
           }}
         >
-          <DashBoardTable books={tableData} />
+          <DashBoardTable books={tableData} role={role} userId={userId} />
         </Box>
         <Box
           sx={{

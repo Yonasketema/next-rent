@@ -43,6 +43,9 @@ model Book {
   createdAt  DateTime   @default(now())
   approved   Boolean    @default(false)
   updatedAt  DateTime   @updatedAt
+
+  @@index([title], name: "title_index")
+  @@index([price], name: "price_index")
 }
 
 model Category {

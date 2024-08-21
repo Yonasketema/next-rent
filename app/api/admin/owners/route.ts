@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ability } from "@/lib/casl";
+import { filterQuery } from "@/lib/filterQuery";
 
 export async function GET(req: Request) {
   try {
@@ -19,10 +20,11 @@ export async function GET(req: Request) {
         },
       });
     }
+    const filters = filterQuery(req, "user");
+    filters.role = "OWNER";
+
     const owners = await prisma.user.findMany({
-      where: {
-        role: "OWNER",
-      },
+      where: filters,
       include: {
         _count: {
           select: {

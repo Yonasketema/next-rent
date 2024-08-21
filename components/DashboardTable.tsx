@@ -9,7 +9,7 @@ import {
   MRT_TableOptions,
   MRT_ColumnFiltersState,
 } from "material-react-table";
-import { Book } from "@prisma/client";
+import { Book, Role } from "@prisma/client";
 import {
   DialogActions,
   DialogContent,
@@ -29,15 +29,26 @@ import { useFilterData } from "@/lib/filterHook";
 
 type TableProps = {
   books: Book[];
+  role: Role;
+  userId?: string;
 };
 
-export default function DashBoardTable({ books }: TableProps) {
+export default function DashBoardTable({ books, role, userId }: TableProps) {
   const [isEditingBook, setIsEditingBook] = useState(false);
- 
+
   const router = useRouter();
-  
-  
- const {data,isRefetching,setGlobalFilter,setColumnFilters,columnFilters,globalFilter}= useFilterData(books,"/api/books")
+
+  const {
+    data,
+    isRefetching,
+    setGlobalFilter,
+    setColumnFilters,
+    columnFilters,
+    globalFilter,
+  } = useFilterData(
+    books,
+    role === "ADMIN" ? "/api/books" : `/api/user/${userId}/books`
+  );
 
   const handleSaveBook: MRT_TableOptions<Book>["onEditingRowSave"] = async ({
     values,
@@ -55,10 +66,10 @@ export default function DashBoardTable({ books }: TableProps) {
         price: values.Price,
       }),
     });
-    router.refresh();
 
     setIsEditingBook(false);
     table.setEditingRow(null); //exit editing mode
+    router.refresh();
   };
 
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
@@ -144,7 +155,7 @@ export default function DashBoardTable({ books }: TableProps) {
         size: 80,
       },
     ],
-    [],
+    []
   );
 
   const table = useMaterialReactTable({

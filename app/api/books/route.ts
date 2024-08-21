@@ -2,44 +2,13 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
 import { ability } from "@/lib/casl";
-import { BookStatus } from "@prisma/client";
-
-interface QueryParams {
-  title?: any;
-  price?: any;
-
-  status?: BookStatus;
-}
+import { filterQuery } from "@/lib/filterQuery";
 
 export async function GET(req: Request) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    const { searchParams } = new URL(req.url);
-
-    const title = searchParams.get("title");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    const status = searchParams.get("status") as BookStatus;
-
-    const filters: QueryParams = {};
-
-    if (title) {
-      filters.title = { contains: title, mode: "insensitive" };
-    }
-    if (minPrice || maxPrice) {
-      filters.price = {};
-      if (Number(minPrice)) {
-        filters.price.gte = Number(minPrice);
-      }
-      if (Number(maxPrice)) {
-        filters.price.lte = Number(maxPrice);
-      }
-    }
-    if (status) {
-      filters.status = status;
-    }
-
+    const filters = filterQuery(req);
     if (!authUser || !ability(authUser).can("read", "Book")) {
       return NextResponse.json({
         data: {
@@ -95,7 +64,7 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json(
         { message: parsed.error.message },
-        { status: 400 },
+        { status: 400 }
       );
     }
     const { title, author, categoryId, price, quantity } = parsed.data;

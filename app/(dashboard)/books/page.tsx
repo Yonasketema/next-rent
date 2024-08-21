@@ -21,9 +21,11 @@ export default async function Books() {
 
   const data = book?.data?.books;
 
+  const categories = await prisma.category.findMany();
+
   return (
     <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
-      <BookTable books={data} />
+      <BookTable books={data} categories={categories} />
     </Box>
   );
 }

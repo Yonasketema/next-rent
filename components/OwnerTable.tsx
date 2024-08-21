@@ -21,6 +21,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
 import DeleteButton from "./DeleteButton";
+import { useFilterData } from "@/lib/filterHook";
 
 type TableProps = {
   owners: User[];
@@ -28,6 +29,15 @@ type TableProps = {
 };
 
 export default function OwnerTable({ owners, title }: TableProps) {
+  const {
+    data,
+    isRefetching,
+    setGlobalFilter,
+    setColumnFilters,
+    columnFilters,
+    globalFilter,
+  } = useFilterData(owners, "/api/admin/owners");
+
   const columns = useMemo<MRT_ColumnDef<User>[]>(
     () => [
       {
@@ -35,6 +45,7 @@ export default function OwnerTable({ owners, title }: TableProps) {
         accessorKey: "no",
         header: "No.",
         maxSize: 50,
+        enableColumnFilter: false,
       },
       {
         accessorFn: (row) => row.name,
@@ -77,8 +88,17 @@ export default function OwnerTable({ owners, title }: TableProps) {
   );
 
   const table = useMaterialReactTable({
+    state: {
+      // isLoading: true,
+      globalFilter,
+      showProgressBars: isRefetching,
+      columnFilters,
+    },
+    manualFiltering: true,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
     columns,
-    data: owners,
+    data,
     enableRowActions: true,
     enableColumnActions: false,
     enablePagination: false,

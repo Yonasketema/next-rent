@@ -21,18 +21,30 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ToggleSwitch from "./ToggleSwitch";
 import ApproveButton from "./ApproveButton";
 import DeleteButton from "./DeleteButton";
+import { useFilterData } from "@/lib/filterHook";
 
 type TableProps = {
   books: Book[];
+  categories: any;
 };
 
-export default function BookTable({ books }: TableProps) {
+export default function BookTable({ books, categories }: TableProps) {
+  const {
+    data,
+    isRefetching,
+    setGlobalFilter,
+    setColumnFilters,
+    columnFilters,
+    globalFilter,
+  } = useFilterData(books, "/api/books", categories);
+
   const columns = useMemo<MRT_ColumnDef<Book>[]>(
     () => [
       {
         accessorFn: (row, i) => (i < 10 ? `0${++i}` : ++i),
         header: "No.",
         maxSize: 10,
+        enableColumnFilter: false,
       },
       {
         accessorFn: (row) => row.author,
@@ -56,6 +68,8 @@ export default function BookTable({ books }: TableProps) {
         id: "category",
         header: "Category",
         maxSize: 120,
+        filterSelectOptions: categories.map((cat) => cat.name),
+        filterVariant: "select",
       },
       {
         accessorFn: (row) => row.title,
@@ -75,12 +89,22 @@ export default function BookTable({ books }: TableProps) {
         ),
       },
     ],
-    [],
+    []
   );
 
   const table = useMaterialReactTable({
+    state: {
+      // isLoading: true,
+      globalFilter,
+      showProgressBars: isRefetching,
+      columnFilters,
+    },
+    manualFiltering: true,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+
     columns,
-    data: books,
+    data,
     enableRowActions: true,
     enableColumnActions: false,
     enablePagination: false,

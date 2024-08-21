@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ability } from "@/lib/casl";
+import { filterQuery } from "@/lib/filterQuery";
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: { userId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
@@ -19,10 +20,11 @@ export async function GET(
       });
     }
 
+    const filters = filterQuery(req, "user");
+    filters.ownerId = params.userId;
+
     const books = await prisma.book.findMany({
-      where: {
-        ownerId: params.userId,
-      },
+      where: filters,
     });
 
     return NextResponse.json({
