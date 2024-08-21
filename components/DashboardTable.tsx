@@ -134,14 +134,22 @@ export default function DashBoardTable({ books, role, userId }: TableProps) {
 
         Cell: ({ row }) => (
           <Box sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
-            <SvgIcon
-              height={14}
-              src={`/icons/${
-                row.original.status === "RENTED" ? "rented" : "free"
-              }.svg`}
-            />
+            {row.original.status !== "UNAVAILABLE" ? (
+              <>
+                <SvgIcon
+                  height={14}
+                  src={`/icons/${
+                    row.original.status === "RENTED" ? "rented" : "free"
+                  }.svg`}
+                />
 
-            <span>{row.original.status === "RENTED" ? "rented" : "free"}</span>
+                <span>
+                  {row.original.status === "RENTED" ? "rented" : "free"}
+                </span>
+              </>
+            ) : (
+              "UNAVAILABLE"
+            )}
           </Box>
         ),
       },

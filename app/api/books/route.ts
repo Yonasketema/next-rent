@@ -77,6 +77,7 @@ export async function POST(req: Request) {
         ownerId: authUser.id,
         price,
         quantity,
+        status: "UNAVAILABLE",
       },
     });
 

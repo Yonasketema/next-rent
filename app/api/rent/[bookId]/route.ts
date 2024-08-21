@@ -4,10 +4,14 @@ import { ability } from "@/lib/casl";
 
 export async function POST(
   req: Request,
-  { params }: { params: { bookId: string } },
+  { params }: { params: { bookId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
+
+    const { searchParams } = new URL(req.url);
+
+    const quantity = searchParams.get("quantity");
 
     if (!authUser || !ability(authUser).can("create", "Rent")) {
       return NextResponse.json({
@@ -20,10 +24,13 @@ export async function POST(
     }
 
     const book = await prisma.book.findUnique({
-      where: { id: params.bookId ,approved:true},
+      where: { id: params.bookId, approved: true },
+      include: {
+        owner: true,
+      },
     });
 
-    if (!book || book.status !== "AVAILABLE") {
+    if (!book || book.status !== "AVAILABLE" || !book.owner.approved) {
       return NextResponse.json({
         data: {
           error: true,
@@ -53,8 +60,8 @@ export async function POST(
     await prisma.book.update({
       where: { id: params.bookId },
       data: {
-        status: book.quantity - 1 === 0 ? "RENTED" : "AVAILABLE",
-        quantity: book.quantity - 1,
+        status: book.quantity - Number(quantity) === 0 ? "RENTED" : "AVAILABLE",
+        quantity: book.quantity - Number(quantity),
       },
     });
 
