@@ -25,6 +25,9 @@ export async function GET(
 
     const books = await prisma.book.findMany({
       where: filters,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json({

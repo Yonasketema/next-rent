@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { bookId: string } },
+  { params }: { params: { bookId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
@@ -21,12 +21,15 @@ export async function PATCH(
 
     const { approved } = await req.json();
 
+    console.table({ approved });
+
     const book = await prisma.book.update({
       where: {
         id: params.bookId,
       },
       data: {
         approved: approved,
+        status: approved ? "AVAILABLE" : "UNAVAILABLE",
       },
     });
 
