@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Box } from "@mui/material";
+import prisma from "@/lib/prisma";
 import BookTable from "@/components/BookTable";
 import { getCurrentSignInUserServer } from "@/lib/authUser";
 import { redirect } from "next/navigation";
