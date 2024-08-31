@@ -1,11 +1,8 @@
 import React from "react";
 import { Box } from "@mui/material";
-import OwnerTable from "@/components/OwnerTable";
-import { redirect } from "next/navigation";
 import { getCurrentSignInUserServer } from "@/lib/authUser";
-import { headers } from "next/headers";
-import { createURL } from "@/lib/api";
 import prisma from "@/lib/prisma";
+import RequestApprovalNotificationTable from "@/components/RequestApprovalNotificationTable";
 
 const Notification = async () => {
   const user = await getCurrentSignInUserServer();
@@ -32,6 +29,7 @@ const Notification = async () => {
     },
   });
 
+ 
   const users = await prisma.user.findMany({
     where: {
       id: {
@@ -50,9 +48,11 @@ const Notification = async () => {
     },
   });
 
+  
+
   return (
     <Box sx={{ backgroundColor: "white", p: 2, borderRadius: 3 }}>
-      <OwnerTable owners={users} title="users request approval" />
+      <RequestApprovalNotificationTable owners={users} title="users request approval" />
     </Box>
   );
 };
