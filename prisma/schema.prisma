@@ -17,7 +17,9 @@ model User {
   location      String
   phone         String
   approved      Boolean    @default(false)
-  role          Role       @default(USER)
+  // role          Role       @default(USER)
+  role          Role       @relation(fields: [roleId], references: [id])
+  roleId        Int        @default(1)
   status        UserStatus @default(ACTIVE)
   books         Book[]
   createdAt     DateTime   @default(now())
@@ -66,11 +68,11 @@ model Rent {
   createdAt DateTime @default(now())
 }
 
-enum Role {
-  ADMIN
-  OWNER
-  USER
-}
+// enum Role {
+//   ADMIN
+//   OWNER
+//   USER
+// }
 
 enum UserStatus {
   ACTIVE
@@ -104,4 +106,18 @@ enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+model Permissions {
+  id          String @id @default(cuid())
+  name        String
+  type        Json
+  permissions Role[] @relation("RolePermissions")
+}
+
+model Role {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  users       User[]
+  permissions Permissions[] @relation("RolePermissions")
 }
