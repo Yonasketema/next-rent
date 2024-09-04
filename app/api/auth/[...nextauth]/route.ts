@@ -31,6 +31,13 @@ export const authOptions: NextAuthOptions = {
           where: {
             email,
           },
+          include: {
+            role: {
+              include: {
+                permissions: true,
+              },
+            },
+          },
         });
 
         if (user && (await bcrypt.compare(password, user.password))) {
@@ -63,7 +70,8 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }: { session: any; token: any }) {
       session.user.userId = token.sub;
-      session.user.role = token.role;
+      session.user.roleId = token.roleId;
+      session.user.role = token.role.name;
 
       return session;
     },

@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { bookSchema } from "@/lib/zodSchemas";
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 import { filterQuery } from "@/lib/filterQuery";
 
 export async function GET(req: Request) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    const filters = filterQuery(req);
-    if (!authUser || !ability(authUser).can("read", "Book")) {
+    const filters = filterQuery(req, "Book");
+
+    console.log("[-] Queries  ", JSON.stringify(filters));
+
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "read",
+        "Book"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,
@@ -18,6 +27,7 @@ export async function GET(req: Request) {
         },
       });
     }
+
     const books = await prisma.book.findMany({
       where: filters,
       include: {
@@ -32,6 +42,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       data: {
         error: false,
+        results: books.length,
         books,
       },
     });
@@ -50,7 +61,13 @@ export async function POST(req: Request) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("create", "Book")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "create",
+        "Book"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,

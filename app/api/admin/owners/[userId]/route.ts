@@ -1,15 +1,21 @@
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: { userId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("update", "User")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "update",
+        "User"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,

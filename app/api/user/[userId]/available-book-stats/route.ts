@@ -17,16 +17,22 @@
  */
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 
 export async function GET(
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: { userId: string } }
 ) {
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("read:stats", "Book")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "read:stats",
+        "Book"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,
@@ -70,7 +76,7 @@ export async function GET(
     });
 
     const categoryMap = Object.fromEntries(
-      categories.map((cat) => [cat.id, cat.name]),
+      categories.map((cat) => [cat.id, cat.name])
     );
 
     const books = bookStats.map((stat) => ({

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 
 export async function POST(
   req: Request,
@@ -13,7 +13,13 @@ export async function POST(
 
     const quantity = searchParams.get("quantity");
 
-    if (!authUser || !ability(authUser).can("create", "Rent")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "create",
+        "Rent"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,

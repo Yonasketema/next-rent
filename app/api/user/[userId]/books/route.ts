@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 import { filterQuery } from "@/lib/filterQuery";
 
 export async function GET(
@@ -10,7 +10,13 @@ export async function GET(
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("read", "Book")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "read",
+        "Book"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,

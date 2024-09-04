@@ -1,4 +1,4 @@
-import { ability } from "@/lib/casl";
+import { createAbility } from "@/lib/casl";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -9,7 +9,13 @@ export async function PATCH(
   try {
     const authUser = JSON.parse(req.headers.get("user") as string);
 
-    if (!authUser || !ability(authUser).can("approve", "User")) {
+    if (
+      !authUser ||
+      !createAbility(authUser.role.permissions, { user: authUser }).can(
+        "approve",
+        "User"
+      )
+    ) {
       return NextResponse.json({
         data: {
           error: true,
@@ -26,7 +32,7 @@ export async function PATCH(
       },
       data: {
         approved: approved,
-        role: "OWNER",
+        roleId: 2,
       },
     });
 

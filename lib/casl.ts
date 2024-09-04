@@ -1,23 +1,21 @@
-import { defineAbility } from "@casl/ability";
+import { AbilityBuilder } from "@casl/ability";
+import { createPrismaAbility } from "@casl/prisma";
+import { interpolate } from "./interpolate";
+import { User } from "@prisma/client";
 
-export const ability = (user: any) =>
-  defineAbility((can) => {
-    can("read", "Book");
-    can("create", "Rent");
-    can(
-      "request-approval",
-      "User",
-    )
+export function createAbility(permissions: any, user: any) {
+  const { can, build } = new AbilityBuilder(createPrismaAbility);
 
-    if (user.role === "OWNER") {
-      can("read:stats", "Book");
-      can("read:income", "Book");
-      can("update", "Book", { ownerId: user.id });
-      can("create", "Book");
-      can("delete", "User", { id: user.id });
-      can("delete", "Book");
-    }
-    if (user.role === "ADMIN") {
-      can("manage", "all");
+  permissions.forEach((permission: any) => {
+    const { type, name } = permission;
+    const { action, subject, conditions } = JSON.parse(type);
+    if (conditions) {
+      const interpolatedConditions = interpolate(conditions, user);
+      can(action, subject, interpolatedConditions);
+    } else {
+      can(action, subject);
     }
   });
+
+  return build();
+}
