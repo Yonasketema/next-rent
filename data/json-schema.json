@@ -1,0 +1,456 @@
+{
+  "$id": "some-schema-id",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "String"
+        },
+        "email": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "emailVerified": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "DateTime"
+        },
+        "image": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "String"
+        },
+        "password": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "location": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "phone": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "approved": {
+          "type": "boolean",
+          "originalType": "Boolean",
+          "default": false
+        },
+        "role": {
+          "$ref": "some-schema-id#/definitions/Role"
+        },
+        "roleId": {
+          "type": "integer",
+          "originalType": "Int",
+          "default": 1
+        },
+        "status": {
+          "type": "string",
+          "originalType": "UserStatus",
+          "default": "ACTIVE",
+          "enum": [
+            "ACTIVE",
+            "DISABLED"
+          ]
+        },
+        "books": {
+          "type": "array",
+          "originalType": "Book",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Book"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "Rent": {
+          "type": "array",
+          "originalType": "Rent",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Rent"
+          }
+        },
+        "Income": {
+          "type": "array",
+          "originalType": "Income",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Income"
+          }
+        },
+        "ApprovalRequest": {
+          "type": "array",
+          "originalType": "ApprovalRequest",
+          "items": {
+            "$ref": "some-schema-id#/definitions/ApprovalRequest"
+          }
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "location",
+        "phone",
+        "updatedAt"
+      ]
+    },
+    "Book": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "title": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "author": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "category": {
+          "$ref": "some-schema-id#/definitions/Category"
+        },
+        "categoryId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "owner": {
+          "$ref": "some-schema-id#/definitions/User"
+        },
+        "ownerId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "status": {
+          "type": "string",
+          "originalType": "BookStatus",
+          "default": "AVAILABLE",
+          "enum": [
+            "AVAILABLE",
+            "RENTED",
+            "UNAVAILABLE"
+          ]
+        },
+        "price": {
+          "type": "number",
+          "originalType": "Float"
+        },
+        "quantity": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "rents": {
+          "type": "array",
+          "originalType": "Rent",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Rent"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "approved": {
+          "type": "boolean",
+          "originalType": "Boolean",
+          "default": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "title",
+        "author",
+        "categoryId",
+        "ownerId",
+        "price",
+        "quantity",
+        "updatedAt"
+      ]
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "name": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "Book": {
+          "type": "array",
+          "originalType": "Book",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Book"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Rent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "book": {
+          "$ref": "some-schema-id#/definitions/Book"
+        },
+        "bookId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "renter": {
+          "$ref": "some-schema-id#/definitions/User"
+        },
+        "renterId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "startDate": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "price": {
+          "type": "number",
+          "originalType": "Float"
+        },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "bookId",
+        "renterId",
+        "startDate",
+        "endDate",
+        "price"
+      ]
+    },
+    "Income": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "amount": {
+          "type": "number",
+          "originalType": "Float"
+        },
+        "user": {
+          "$ref": "some-schema-id#/definitions/User"
+        },
+        "ownerId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "createdAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "amount",
+        "ownerId"
+      ]
+    },
+    "ApprovalRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "user": {
+          "$ref": "some-schema-id#/definitions/User"
+        },
+        "userId": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "requestedAt": {
+          "type": "string",
+          "originalType": "DateTime",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "originalType": "RequestStatus",
+          "default": "PENDING",
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "seen": {
+          "type": "boolean",
+          "originalType": "Boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "userId"
+      ]
+    },
+    "Permissions": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "name": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "originalType": "Json"
+        },
+        "permissions": {
+          "type": "array",
+          "originalType": "Role",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Role"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
+    },
+    "Role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "originalType": "Int"
+        },
+        "name": {
+          "type": "string",
+          "originalType": "String"
+        },
+        "users": {
+          "type": "array",
+          "originalType": "User",
+          "items": {
+            "$ref": "some-schema-id#/definitions/User"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "originalType": "Permissions",
+          "items": {
+            "$ref": "some-schema-id#/definitions/Permissions"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "some-schema-id#/definitions/User"
+    },
+    "book": {
+      "$ref": "some-schema-id#/definitions/Book"
+    },
+    "category": {
+      "$ref": "some-schema-id#/definitions/Category"
+    },
+    "rent": {
+      "$ref": "some-schema-id#/definitions/Rent"
+    },
+    "income": {
+      "$ref": "some-schema-id#/definitions/Income"
+    },
+    "approvalRequest": {
+      "$ref": "some-schema-id#/definitions/ApprovalRequest"
+    },
+    "permissions": {
+      "$ref": "some-schema-id#/definitions/Permissions"
+    },
+    "role": {
+      "$ref": "some-schema-id#/definitions/Role"
+    }
+  }
+}
