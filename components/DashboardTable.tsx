@@ -199,7 +199,7 @@ export default function DashBoardTable({ books, role, userId }: TableProps) {
         "categoryId",
       ],
     },
-    data,
+    data: data || [],
     onEditingRowSave: handleSaveBook,
     createDisplayMode: "modal",
     editDisplayMode: "modal",

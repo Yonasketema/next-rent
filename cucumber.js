@@ -1,6 +1,6 @@
 const config = {
-  paths: ["features/**/*.feature"],
-  require: ["features/step-definitions/**/*.ts"],
+  paths: ["tests/features/**/*.feature"],
+  require: ["tests/features/step-definitions/**/*.ts"],
 
   requireModule: ["ts-node/register"],
   format: ["summary", "progress-bar"],

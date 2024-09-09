@@ -76,10 +76,7 @@
           "type": "string",
           "originalType": "UserStatus",
           "default": "ACTIVE",
-          "enum": [
-            "ACTIVE",
-            "DISABLED"
-          ]
+          "enum": ["ACTIVE", "DISABLED"]
         },
         "books": {
           "type": "array",
@@ -120,13 +117,7 @@
           }
         }
       },
-      "required": [
-        "email",
-        "password",
-        "location",
-        "phone",
-        "updatedAt"
-      ]
+      "required": ["email", "password", "location", "phone", "updatedAt"]
     },
     "Book": {
       "type": "object",
@@ -161,11 +152,7 @@
           "type": "string",
           "originalType": "BookStatus",
           "default": "AVAILABLE",
-          "enum": [
-            "AVAILABLE",
-            "RENTED",
-            "UNAVAILABLE"
-          ]
+          "enum": ["AVAILABLE", "RENTED", "UNAVAILABLE"]
         },
         "price": {
           "type": "number",
@@ -227,9 +214,7 @@
           }
         }
       },
-      "required": [
-        "name"
-      ]
+      "required": ["name"]
     },
     "Rent": {
       "type": "object",
@@ -272,13 +257,7 @@
           "format": "date-time"
         }
       },
-      "required": [
-        "bookId",
-        "renterId",
-        "startDate",
-        "endDate",
-        "price"
-      ]
+      "required": ["bookId", "renterId", "startDate", "endDate", "price"]
     },
     "Income": {
       "type": "object",
@@ -304,10 +283,7 @@
           "format": "date-time"
         }
       },
-      "required": [
-        "amount",
-        "ownerId"
-      ]
+      "required": ["amount", "ownerId"]
     },
     "ApprovalRequest": {
       "type": "object",
@@ -332,11 +308,7 @@
           "type": "string",
           "originalType": "RequestStatus",
           "default": "PENDING",
-          "enum": [
-            "PENDING",
-            "APPROVED",
-            "REJECTED"
-          ]
+          "enum": ["PENDING", "APPROVED", "REJECTED"]
         },
         "seen": {
           "type": "boolean",
@@ -344,9 +316,7 @@
           "default": false
         }
       },
-      "required": [
-        "userId"
-      ]
+      "required": ["userId"]
     },
     "Permissions": {
       "type": "object",
@@ -390,10 +360,7 @@
           }
         }
       },
-      "required": [
-        "name",
-        "type"
-      ]
+      "required": ["name", "type"]
     },
     "Role": {
       "type": "object",
@@ -421,9 +388,7 @@
           }
         }
       },
-      "required": [
-        "name"
-      ]
+      "required": ["name"]
     }
   },
   "type": "object",

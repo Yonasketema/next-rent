@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
-import { bookSchema, bookUpdateSchema } from "@/lib/zodSchemas";
-import { createAbility } from "@/lib/casl";
+import prisma from "./../../../../lib/prisma";
+import { bookSchema, bookUpdateSchema } from "./../../../../lib/zodSchemas";
+import { createAbility } from "./../../../../lib/casl";
 import { subject } from "@casl/ability";
 
 export async function GET(
@@ -104,6 +104,7 @@ export async function PUT(
       data: {
         error: false,
         books,
+        status: 200,
       },
     });
   } catch (error) {

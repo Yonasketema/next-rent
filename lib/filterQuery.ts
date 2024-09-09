@@ -1,4 +1,4 @@
-import jsonSchema from "@/data/json-schema.json";
+import jsonSchema from "./../data/json-schema.json";
 import { Prisma } from "@prisma/client";
 
 interface PrismaQuery {

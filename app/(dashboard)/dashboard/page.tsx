@@ -6,7 +6,6 @@ import OwnerDashboard from "@/components/OwnerDashboard";
 const Dashboard = async () => {
   const user = await getCurrentSignInUserServer();
 
- 
   if (!user) return redirect("/login?callbackUrl=/dashboard");
 
   return (
@@ -18,5 +17,3 @@ const Dashboard = async () => {
 };
 
 export default Dashboard;
-
-

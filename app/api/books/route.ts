@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
-import { bookSchema } from "@/lib/zodSchemas";
-import { createAbility } from "@/lib/casl";
-import { filterQuery } from "@/lib/filterQuery";
+import prisma from "./../../../lib/prisma";
+import { bookSchema } from "./../../../lib/zodSchemas";
+import { createAbility } from "./../../../lib/casl";
+import { filterQuery } from "./../../../lib/filterQuery";
 
 export async function GET(req: Request) {
   try {
@@ -43,6 +43,7 @@ export async function GET(req: Request) {
       data: {
         error: false,
         results: books.length,
+        status: 200,
         books,
       },
     });
