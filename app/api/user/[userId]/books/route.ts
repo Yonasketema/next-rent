@@ -26,7 +26,7 @@ export async function GET(
       });
     }
 
-    const filters = filterQuery(req, "user");
+    const filters = filterQuery(req, "User");
     filters.ownerId = params.userId;
 
     const books = await prisma.book.findMany({

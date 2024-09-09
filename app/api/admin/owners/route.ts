@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createAbility } from "@/lib/casl";
 import { filterQuery } from "@/lib/filterQuery";
+import { OWNER_ROLE_ID } from "@/lib/var";
 
 export async function GET(req: Request) {
   try {
@@ -26,11 +27,13 @@ export async function GET(req: Request) {
         },
       });
     }
-    const filters = filterQuery(req, "user");
-    filters.role = "OWNER";
+    const filters = filterQuery(req, "User");
+    filters.roleId = OWNER_ROLE_ID;
 
     const owners = await prisma.user.findMany({
-      where: filters,
+      where: {
+        roleId: 1,
+      },
       include: {
         _count: {
           select: {

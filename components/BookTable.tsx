@@ -104,7 +104,7 @@ export default function BookTable({ books, categories }: TableProps) {
     onColumnFiltersChange: setColumnFilters,
 
     columns,
-    data,
+    data: data || [],
     enableRowActions: true,
     enableColumnActions: false,
     enablePagination: false,

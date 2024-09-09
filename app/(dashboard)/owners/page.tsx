@@ -8,6 +8,7 @@ import { createURL } from "@/lib/api";
 
 const Owners = async () => {
   const user = await getCurrentSignInUserServer();
+  console.log("OOOOO0000000000000000");
 
   if (user?.user?.role !== "ADMIN")
     return redirect("/login?callbackUrl=/owners");

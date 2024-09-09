@@ -98,7 +98,7 @@ export default function OwnerTable({ owners, title }: TableProps) {
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
     columns,
-    data,
+    data: data || [],
     enableRowActions: true,
     enableColumnActions: false,
     enablePagination: false,
