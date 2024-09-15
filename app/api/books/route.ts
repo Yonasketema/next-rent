@@ -102,6 +102,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       data: {
         error: false,
+        status: 201,
         books,
       },
     });
