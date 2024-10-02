@@ -1,70 +1,44 @@
 "use client";
 
-import { SyntheticEvent, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Container,
   Box,
   Typography,
   Button,
-  Checkbox,
-  FormControlLabel,
   TextField,
   Divider,
-  CircularProgress,
 } from "@mui/material";
 
 import Image from "next/image";
-import { signup } from "@/lib/api";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { signupSchema } from "@/lib/zodSchemas";
+import { signupUser } from "@/actions/login";
+import { useFormState } from "react-dom";
 
 export default function Signup() {
-  const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    location: "",
-    phone: "",
-  });
-  const [checked, setChecked] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState("");
+ 
+  const [errors, setErrors] = useState(null);
+  const formRef = useRef(null)
 
-  const handleCheckChange = (event) => {
-    setChecked(event.target.checked);
-  };
+  // async function action(data) {
+  //   const {error}= await signupUser(data)
+  //    if(error){
+  //      setErrors(error)
+  //    }else{
+  //     setErrors(null)
+  //     formRef.current.reset()
+  //    }
+  //  }
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setErrors("");
-    setFormValues({ ...formValues, [id]: value });
-  };
+  const [formState,formAction] = useFormState(signupUser,null)
 
-  const router = useRouter();
-
-  async function handleSubmit(e: SyntheticEvent) {
-    e.preventDefault();
-
-    try {
-      setIsLoading(true);
-      const inputs = signupSchema.parse(formValues);
-      const newUser = await signup(
-        inputs.phone,
-        inputs.email,
-        inputs.password,
-        inputs.location,
-      );
-      setIsLoading(false);
-
-      if (newUser) {
-        router.push("/login");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      setErrors(error.formErrors.fieldErrors);
-    }
+  if(typeof formState?.errors ===  "string" ){
+    console.log(formState.errors)
+    throw new Error('Error happen when signup a user!')
   }
+
+  
+ 
 
   return (
     <Box display="flex" height="100vh">
@@ -119,7 +93,8 @@ export default function Signup() {
               gap: 12,
               marginTop: 21,
             }}
-            onSubmit={handleSubmit}
+            ref={formRef}
+            action={formAction}
           >
             <TextField
               fullWidth
@@ -127,10 +102,9 @@ export default function Signup() {
               label="Email address"
               type="email"
               id="email"
-              value={formValues.email}
-              onChange={handleChange}
+              name="email"
             />
-            {errors.email && <p style={{ color: "red" }}>{errors.email}</p>}
+              <p style={{ color: "red" }}>{formState?.errors?.email?._errors.join(',')}</p>
 
             <TextField
               fullWidth
@@ -138,12 +112,10 @@ export default function Signup() {
               label="Password"
               type="password"
               id="password"
-              value={formValues.password}
-              onChange={handleChange}
+              name="password"
             />
-            {errors.password && (
-              <p style={{ color: "red" }}>{errors.password}</p>
-            )}
+              <p style={{ color: "red" }}>{formState?.errors?.password?._errors.join(',')}</p>
+
 
             <TextField
               fullWidth
@@ -151,12 +123,11 @@ export default function Signup() {
               label="Confirm Password"
               type="password"
               id="confirmPassword"
-              value={formValues.confirmPassword}
-              onChange={handleChange}
+              name="confirmPassword"
             />
-            {errors.confirmPassword && (
-              <p style={{ color: "red" }}>{errors.confirmPassword}</p>
-            )}
+
+  <p style={{ color: "red" }}>{formState?.errors?.confirmPassword?._errors.join(',')}</p>
+
 
             <TextField
               fullWidth
@@ -164,12 +135,9 @@ export default function Signup() {
               label="Location"
               type="text"
               id="location"
-              value={formValues.location}
-              onChange={handleChange}
+              name="location"
             />
-            {errors.location && (
-              <p style={{ color: "red" }}>{errors.location}</p>
-            )}
+ <p style={{ color: "red" }}>{formState?.errors?.location?._errors.join(',')}</p>
 
             <TextField
               fullWidth
@@ -177,12 +145,13 @@ export default function Signup() {
               label="Phone Number"
               type="tel"
               id="phone"
-              value={formValues.phone}
-              onChange={handleChange}
+              name="phone"
             />
-            {errors.phone && <p style={{ color: "red" }}>{errors.phone}</p>}
+ <p style={{ color: "red" }}>{formState?.errors?.phone?._errors.join(',')}</p>
 
-            <FormControlLabel
+            
+
+            {/* <FormControlLabel
               control={
                 <Checkbox
                   checked={checked}
@@ -192,7 +161,7 @@ export default function Signup() {
                 />
               }
               label="I accept the Terms and Conditions"
-            />
+            /> */}
             <Button
               variant="contained"
               color="primary"
@@ -201,10 +170,10 @@ export default function Signup() {
                 p: 1,
               }}
               fullWidth
-              disabled={!checked || isLoading}
+              // disabled={!checked || isLoading}
               type="submit"
             >
-              {isLoading ? <CircularProgress size={21} /> : "SIGN IN"}
+              SIGN IN
             </Button>
             <Typography
               variant="body2"

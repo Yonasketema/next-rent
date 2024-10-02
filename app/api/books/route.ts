@@ -3,59 +3,51 @@ import prisma from "./../../../lib/prisma";
 import { bookSchema } from "./../../../lib/zodSchemas";
 import { createAbility } from "./../../../lib/casl";
 import { filterQuery } from "./../../../lib/filterQuery";
+import { getAllBook } from "@/lib/book";
 
 export async function GET(req: Request) {
-  try {
-    const authUser = JSON.parse(req.headers.get("user") as string);
+  const authUser = JSON.parse(req.headers.get("user") as string);
 
-    const filters = filterQuery(req, "Book");
+  const filters = filterQuery(req, "Book");
 
-    console.log("[-] Queries  ", JSON.stringify(filters));
+  console.log("[-] Queries  ", JSON.stringify(filters));
 
-    if (
-      !authUser ||
-      !createAbility(authUser.role.permissions, { user: authUser }).can(
-        "read",
-        "Book"
-      )
-    ) {
-      return NextResponse.json({
-        data: {
-          error: true,
-          message: "unauthorized",
-          status: 401,
-        },
-      });
-    }
-
-    const books = await prisma.book.findMany({
-      where: filters,
-      include: {
-        category: true,
-        owner: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    return NextResponse.json({
-      data: {
-        error: false,
-        results: books.length,
-        status: 200,
-        books,
-      },
-    });
-  } catch (error) {
+  if (
+    !authUser ||
+    !createAbility(authUser.role.permissions, { user: authUser }).can(
+      "read",
+      "Book"
+    )
+  ) {
     return NextResponse.json({
       data: {
         error: true,
-        message: error.message,
+        message: "unauthorized",
+        status: 401,
+      },
+    });
+  }
+
+  const { books, error } = await getAllBook(filters);
+
+  if (!books || error) {
+    return NextResponse.json({
+      data: {
+        error: true,
+        message: error,
         status: 500,
       },
     });
   }
+
+  return NextResponse.json({
+    data: {
+      error: false,
+      results: books.length,
+      status: 200,
+      books,
+    },
+  });
 }
 
 export async function POST(req: Request) {
